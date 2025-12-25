@@ -1,14 +1,17 @@
 package com.employee.employee.entity;
 
 import com.employee.employee.constant.Level;
-import com.employee.employee.constant.Role;
 import com.employee.employee.constant.Status;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
-import java.time.Instant;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -16,7 +19,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Employe {
+public class Employee {
 
     @Id
     @GeneratedValue
@@ -40,8 +43,8 @@ public class Employe {
 
     private UUID departmentId;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<HistoryRole> roles = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private Level level;
@@ -51,6 +54,11 @@ public class Employe {
     private LocalDate hireDate;
 
     private LocalDate endDate;
+
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SalaryHistory> salary = new ArrayList<>();
+
 }

@@ -22,11 +22,11 @@ public class ControllerEmploye {
         //Crea un nuovo dipendente
     }
     @PutMapping("/{id}")
-    public void updateEmployees(Integer id){
+    public void updateEmploye(Integer id){
         //Aggiorna dati dipendente
     }
     @DeleteMapping("/{id}")
-    public void deleteEmployees(Integer id){
+    public void deleteEmploye(Integer id){
         //Disattiva/elimina dipendente
     }
     @GetMapping("/{role}")
@@ -34,7 +34,7 @@ public class ControllerEmploye {
         //Filtra dipendenti per ruolo
     }
     @GetMapping("/{department}")
-    public void getEmploye(String department){
+    public void getEmployeByDepartment(String department){
         //Filtra dipendenti per reparto
     }
     /*

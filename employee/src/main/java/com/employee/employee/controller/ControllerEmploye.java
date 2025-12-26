@@ -1,13 +1,13 @@
 package com.employee.employee.controller;
 
-import com.employee.employee.ServiceEmployee;
+import com.employee.employee.service.ServiceEmployee;
 import com.employee.employee.constant.Role;
 import com.employee.employee.entity.Employee;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -37,20 +37,21 @@ public class ControllerEmploye {
         return ResponseEntity.ok(employeupdate);
     }
     @DeleteMapping("/{id}")
-    public void deleteEmploye(@PathVariable("id") UUID id){
-        //Disattiva/elimina dipendente
+    public ResponseEntity<String> deleteEmploye(@PathVariable("id") UUID id){
+        return ResponseEntity.ok(service.disableUser(id));
+
     }
     @GetMapping("/{role}")
-    public void getEmployeByRole(@PathVariable("role") Role role){
-        //Filtra dipendenti per ruolo
+    public ResponseEntity<List<Employee>> getEmployeByRole(@PathVariable("role") Role role){
+        return ResponseEntity.ok(service.getEmployeesByRole(role));
     }
     @GetMapping("/{idDepartment}")
-    public void getEmployeByDepartment(@PathVariable("idDepartment") UUID idDepartment){
-        //Filtra dipendenti per reparto
+    public ResponseEntity<List<Employee>> getEmployeByDepartment(@PathVariable("idDepartment") UUID idDepartment){
+        return ResponseEntity.ok(service.getEmployeesByDepartmentId(idDepartment));
     }
     @GetMapping("/{idManager}")
-    public void getEmployeByManager(@PathVariable("idManager") UUID idDepartment){
-        //Filtra dipendenti per reparto
+    public ResponseEntity<List<Employee>> getEmployeByManager(@PathVariable("idManager") UUID idDepartment){
+        return ResponseEntity.ok(service.getEmployeesByManagerId(idDepartment));
     }
     /*
 

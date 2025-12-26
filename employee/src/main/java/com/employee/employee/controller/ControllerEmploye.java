@@ -1,9 +1,9 @@
 package com.employee.employee.controller;
 
+import com.employee.employee.constant.Role;
+import com.employee.employee.constant.Status;
 import com.employee.employee.dto.EmployeeDto;
 import com.employee.employee.request.EmployeeRequest;
-import com.employee.employee.service.ServiceEmployee;
-import com.employee.employee.constant.Role;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,43 +16,38 @@ import java.util.UUID;
 @RequestMapping("employees")
 public class ControllerEmploye {
 
-    private final ServiceEmployee service;
-
     @GetMapping
     public void getEmployees(){
         //Lista tutti i dipendenti
     }
     @GetMapping("/{id}")
-    public ResponseEntity<EmployeeDto> getEmploye(@PathVariable("id") UUID id){
-        EmployeeDto employee = service.getEmployeeById(id);
-        return ResponseEntity.ok(employee);
+    public ResponseEntity<EmployeeDto> getEmployee(@PathVariable("id") UUID id){
+        return ResponseEntity.ok(null);
     }
     @PostMapping
-    public ResponseEntity<EmployeeDto> createEmploye(EmployeeRequest request){
-        EmployeeDto employeCreated = service.createEmployee(request);
-        return ResponseEntity.ok(employeCreated);
+    public ResponseEntity<EmployeeDto> createEmployee(EmployeeRequest request){
+        return ResponseEntity.ok(null);
     }
     @PutMapping
-    public ResponseEntity<EmployeeDto> updateEmploye(EmployeeRequest request){
-        EmployeeDto employeupdate = service.updateEmployee(request);
-        return ResponseEntity.ok(employeupdate);
+    public ResponseEntity<EmployeeDto> updateEmployee(EmployeeRequest request){
+        return ResponseEntity.ok(null);
     }
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteEmploye(@PathVariable("id") UUID id){
-        return ResponseEntity.ok(service.disableUser(id));
+    @PutMapping("/{id}")
+    public ResponseEntity<String> statusEmployee(@PathVariable("id") UUID id, Status status){
+        return ResponseEntity.ok(null);
 
     }
     @GetMapping("/{role}")
-    public ResponseEntity<List<EmployeeDto>> getEmployeByRole(@PathVariable("role") Role role){
-        return ResponseEntity.ok(service.getEmployeesByRole(role));
+    public ResponseEntity<List<EmployeeDto>> getEmployeeByRole(@PathVariable("role") Role role){
+        return ResponseEntity.ok(null);
     }
     @GetMapping("/{idDepartment}")
-    public ResponseEntity<List<EmployeeDto>> getEmployeByDepartment(@PathVariable("idDepartment") UUID idDepartment){
-        return ResponseEntity.ok(service.getEmployeesByDepartmentId(idDepartment));
+    public ResponseEntity<List<EmployeeDto>> getEmployeeByDepartment(@PathVariable("idDepartment") UUID idDepartment){
+        return ResponseEntity.ok(null);
     }
     @GetMapping("/{idManager}")
-    public ResponseEntity<List<EmployeeDto>> getEmployeByManager(@PathVariable("idManager") UUID idDepartment){
-        return ResponseEntity.ok(service.getEmployeesByManagerId(idDepartment));
+    public ResponseEntity<List<EmployeeDto>> getEmployeeByManager(@PathVariable("idManager") UUID idDepartment){
+        return ResponseEntity.ok(null);
     }
     /*
 

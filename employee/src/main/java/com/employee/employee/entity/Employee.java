@@ -1,6 +1,7 @@
 package com.employee.employee.entity;
 
 import com.employee.employee.constant.Level;
+import com.employee.employee.constant.Role;
 import com.employee.employee.constant.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -42,6 +43,9 @@ public class Employee {
     private String employeeCode;
 
     private UUID departmentId;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<HistoryRole> roles = new ArrayList<>();

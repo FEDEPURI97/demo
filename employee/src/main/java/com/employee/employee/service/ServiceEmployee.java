@@ -1,25 +1,24 @@
 package com.employee.employee.service;
 
 import com.employee.employee.constant.Role;
-import com.employee.employee.dto.EmployeeDto;
-import com.employee.employee.request.EmployeeRequest;
+import com.employee.employee.constant.Status;
+import com.employee.employee.entity.Employee;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface ServiceEmployee {
 
-    EmployeeDto getEmployeeById(UUID id);
+    Optional<Employee> getEmployeeById(UUID id);
 
-    EmployeeDto createEmployee(EmployeeRequest employee);
+    Employee saveEmployee(Employee employee);
 
-    EmployeeDto updateEmployee(EmployeeRequest employee);
+    String statusUser(Employee employee, Status status);
 
-    String disableUser(UUID id);
+    List<Employee> getEmployeesByRole(Role role);
 
-    List<EmployeeDto> getEmployeesByRole(Role role);
+    List<Employee> getEmployeesByDepartmentId(UUID idDepartment);
 
-    List<EmployeeDto> getEmployeesByDepartmentId(UUID idDepartment);
-
-    List<EmployeeDto> getEmployeesByManagerId(UUID idDepartment);
+    List<Employee> getEmployeesByManagerId(UUID idDepartment);
 }

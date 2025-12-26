@@ -63,9 +63,9 @@ public class Employee {
     private Status status;
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SalaryHistory> salary = new ArrayList<>();
+    private List<SalaryHistory> salaryHistory = new ArrayList<>();
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
-    private  List<ProjectHistory> project = new ArrayList<>();
+    private  List<ProjectHistory> projectHistory = new ArrayList<>();
 
 }

@@ -2,6 +2,7 @@ package com.employee.employee.request;
 
 import com.employee.employee.constant.Level;
 import com.employee.employee.constant.Role;
+import com.employee.employee.dto.DepartmentDto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -22,7 +23,9 @@ public record EmployeeRequest(
 
         Level level,
 
-        BigDecimal salary
+        BigDecimal salary,
+
+        DepartmentDto department
 
 ) {
 }

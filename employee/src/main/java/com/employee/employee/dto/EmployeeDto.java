@@ -6,6 +6,7 @@ import com.employee.employee.constant.Status;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 public record EmployeeDto(
 
@@ -21,13 +22,13 @@ public record EmployeeDto(
 
         String employeeCode,
 
-        DepartmentDto department,
+        DepartmentDto departmentDto,
 
         Role role,
 
         Level level,
 
-        ManagerDto manager,
+        ManagerDto managerDto,
 
         LocalDate hireDate,
 
@@ -37,7 +38,7 @@ public record EmployeeDto(
 
         BigDecimal salary,
 
-        ProjectDto project
+        List<ProjectDto> projectsDto
 
 ) {
 }

@@ -1,6 +1,5 @@
 package com.employee.employee.entity;
 
-
 import com.employee.employee.constant.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -17,7 +16,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class HistoryRole {
+public class ProjectHistory {
 
     @Id
     @GeneratedValue
@@ -29,7 +28,7 @@ public class HistoryRole {
     @JoinColumn(name = "employee_id")
     private Employee employee;
 
-    private UUID employeeId;
+    private UUID projectId;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -37,6 +36,5 @@ public class HistoryRole {
     private LocalDate startDate;
 
     private LocalDate endDate;
-
 
 }

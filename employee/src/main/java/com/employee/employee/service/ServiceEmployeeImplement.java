@@ -1,7 +1,8 @@
 package com.employee.employee.service;
 
 import com.employee.employee.constant.Role;
-import com.employee.employee.entity.Employee;
+import com.employee.employee.dto.EmployeeDto;
+import com.employee.employee.request.EmployeeRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,18 +10,19 @@ import java.util.UUID;
 
 @Service
 public class ServiceEmployeeImplement implements ServiceEmployee{
+
     @Override
-    public Employee getEmployeeById(UUID id) {
+    public EmployeeDto getEmployeeById(UUID id) {
         return null;
     }
 
     @Override
-    public Employee createEmployee(Employee employee) {
+    public EmployeeDto createEmployee(EmployeeRequest employee) {
         return null;
     }
 
     @Override
-    public Employee updateEmployee(Employee employee) {
+    public EmployeeDto updateEmployee(EmployeeRequest employee) {
         return null;
     }
 
@@ -30,17 +32,17 @@ public class ServiceEmployeeImplement implements ServiceEmployee{
     }
 
     @Override
-    public List<Employee> getEmployeesByRole(Role role) {
+    public List<EmployeeDto> getEmployeesByRole(Role role) {
         return List.of();
     }
 
     @Override
-    public List<Employee> getEmployeesByDepartmentId(UUID idDepartment) {
+    public List<EmployeeDto> getEmployeesByDepartmentId(UUID idDepartment) {
         return List.of();
     }
 
     @Override
-    public List<Employee> getEmployeesByManagerId(UUID idDepartment) {
+    public List<EmployeeDto> getEmployeesByManagerId(UUID idDepartment) {
         return List.of();
     }
 }

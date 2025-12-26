@@ -1,8 +1,9 @@
 package com.employee.employee.controller;
 
+import com.employee.employee.dto.EmployeeDto;
+import com.employee.employee.request.EmployeeRequest;
 import com.employee.employee.service.ServiceEmployee;
 import com.employee.employee.constant.Role;
-import com.employee.employee.entity.Employee;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,18 +23,18 @@ public class ControllerEmploye {
         //Lista tutti i dipendenti
     }
     @GetMapping("/{id}")
-    public ResponseEntity<Employee> getEmploye(@PathVariable("id") UUID id){
-        Employee employee = service.getEmployeeById(id);
+    public ResponseEntity<EmployeeDto> getEmploye(@PathVariable("id") UUID id){
+        EmployeeDto employee = service.getEmployeeById(id);
         return ResponseEntity.ok(employee);
     }
     @PostMapping
-    public ResponseEntity<Employee> createEmploye(Employee employee){
-        Employee employeCreated = service.createEmployee(employee);
+    public ResponseEntity<EmployeeDto> createEmploye(EmployeeRequest request){
+        EmployeeDto employeCreated = service.createEmployee(request);
         return ResponseEntity.ok(employeCreated);
     }
     @PutMapping
-    public ResponseEntity<Employee> updateEmploye(Employee  employee){
-        Employee employeupdate = service.updateEmployee(employee);
+    public ResponseEntity<EmployeeDto> updateEmploye(EmployeeRequest request){
+        EmployeeDto employeupdate = service.updateEmployee(request);
         return ResponseEntity.ok(employeupdate);
     }
     @DeleteMapping("/{id}")
@@ -42,15 +43,15 @@ public class ControllerEmploye {
 
     }
     @GetMapping("/{role}")
-    public ResponseEntity<List<Employee>> getEmployeByRole(@PathVariable("role") Role role){
+    public ResponseEntity<List<EmployeeDto>> getEmployeByRole(@PathVariable("role") Role role){
         return ResponseEntity.ok(service.getEmployeesByRole(role));
     }
     @GetMapping("/{idDepartment}")
-    public ResponseEntity<List<Employee>> getEmployeByDepartment(@PathVariable("idDepartment") UUID idDepartment){
+    public ResponseEntity<List<EmployeeDto>> getEmployeByDepartment(@PathVariable("idDepartment") UUID idDepartment){
         return ResponseEntity.ok(service.getEmployeesByDepartmentId(idDepartment));
     }
     @GetMapping("/{idManager}")
-    public ResponseEntity<List<Employee>> getEmployeByManager(@PathVariable("idManager") UUID idDepartment){
+    public ResponseEntity<List<EmployeeDto>> getEmployeByManager(@PathVariable("idManager") UUID idDepartment){
         return ResponseEntity.ok(service.getEmployeesByManagerId(idDepartment));
     }
     /*

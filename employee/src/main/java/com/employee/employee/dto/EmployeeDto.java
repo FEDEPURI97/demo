@@ -35,7 +35,9 @@ public record EmployeeDto(
 
         Status status,
 
-        BigDecimal salary
+        BigDecimal salary,
+
+        ProjectDto project
 
 ) {
 }

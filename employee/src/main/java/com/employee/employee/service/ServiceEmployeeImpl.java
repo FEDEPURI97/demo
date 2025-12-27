@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,9 +43,10 @@ public class ServiceEmployeeImpl implements ServiceEmployee{
                 client.getDepartmentById(model.getDepartmentId())
         );
 
-        Mono<List<ProjectDto>> projectDtoMono = modelMono.flatMap(model ->
-                client.getProjectsByIds(model.getProject())
-        );
+        Mono<List<ProjectDto>> projectDtoMono = modelMono.flatMap(model -> {
+            List<UUID> projects = model.getProject() != null ? model.getProject() : Collections.emptyList();
+            return client.getProjectsByIds(projects);
+        });
 
         return Mono.zip(modelMono, projectDtoMono, departmentDtoMono)
                 .map(tuple ->

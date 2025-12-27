@@ -2,10 +2,21 @@ spring:
   application:
     name: employee
 
+  r2dbc:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    pool:
+      initial-size: 5
+      max-size: 20
+
+  main:
+    web-application-type: reactive
+
 services:
   base:
-    url: {BASE_URL}
+    url: ${BASE_URL}
   department:
-    uri: {URI_DEPARTMENT:/departments/{id}}
+    uri: "/department/{id}"
   project:
-    uri: {URI_PROJECT:/project/active/batch}
+    uri: "/project/active/batch"

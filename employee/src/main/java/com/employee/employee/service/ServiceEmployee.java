@@ -30,4 +30,7 @@ public interface ServiceEmployee {
 
     Mono<String> salaryUser(UUID userId, BigDecimal salary);
 
+    Flux<EmployeeDto> getAllEmploye();
+
+    Mono<String> deleteEmployee(UUID id);
 }

@@ -127,7 +127,22 @@ public class ServiceEmployeeImpl implements ServiceEmployee{
                 });
     }
 
+    @Override
+    public Flux<EmployeeDto> getAllEmploye() {
+        return repositoryEmployee.findAll()
+                .flatMap(this::buildEmployeeDto);
+    }
 
+    @Override
+    @Transactional
+    public Mono<String> deleteEmployee(UUID id) {
+        return repositoryEmployee.findById(id)
+                .switchIfEmpty(Mono.error(new EntityNotIdException(id)))
+                .flatMap(employee ->
+                        repositoryEmployee.delete(employee)
+                                .then(Mono.just("Employee eliminato con successo"))
+                );
+    }
 
 
     @Override

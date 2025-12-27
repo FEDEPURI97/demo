@@ -8,9 +8,9 @@ import com.employee.employee.service.ServiceEmployee;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -30,59 +30,29 @@ public class ControllerEmploye {
         return serviceEmployee.getEmployeeById(id);
     }
     @PostMapping
-    public ResponseEntity<EmployeeDto> createEmployee(EmployeeRequest request){
-        return ResponseEntity.ok(null);
+    public Mono<EmployeeDto> createEmployee(EmployeeRequest request){
+        return serviceEmployee.createEmployee(request);
     }
     @PutMapping
     public ResponseEntity<EmployeeDto> updateEmployee(EmployeeRequest request){
         return ResponseEntity.ok(null);
     }
     @PutMapping("/{id}")
-    public ResponseEntity<String> statusEmployee(@PathVariable("id") UUID id, Status status){
-        return ResponseEntity.ok(null);
+    public Mono<String> statusEmployee(@PathVariable("id") UUID id, Status status){
+        return serviceEmployee.statusUser(id, status);
 
     }
     @GetMapping("/{role}")
-    public ResponseEntity<List<EmployeeDto>> getEmployeeByRole(@PathVariable("role") Role role){
-        return ResponseEntity.ok(null);
+    public Flux<EmployeeDto> getEmployeeByRole(@PathVariable("role") Role role){
+        return serviceEmployee.getEmployeesByRole(role);
     }
     @GetMapping("/{idDepartment}")
-    public ResponseEntity<List<EmployeeDto>> getEmployeeByDepartment(@PathVariable("idDepartment") UUID idDepartment){
-        return ResponseEntity.ok(null);
+    public Flux<EmployeeDto> getEmployeeByDepartment(@PathVariable("idDepartment") UUID idDepartment){
+        return serviceEmployee.getEmployeesByDepartmentId(idDepartment);
     }
     @GetMapping("/{idManager}")
-    public ResponseEntity<List<EmployeeDto>> getEmployeeByManager(@PathVariable("idManager") UUID idDepartment){
-        return ResponseEntity.ok(null);
+    public Flux<EmployeeDto> getEmployeeByManager(@PathVariable("idManager") UUID idManager){
+        return serviceEmployee.getEmployeesByManagerId(idManager);
     }
-    /*
-
-
-    🧩 Microservizi principali (core)
-
-
-
-3️⃣ Project Service
-
-Gestisce:
-
-progetti aziendali
-
-date
-
-budget
-
-stato
-
-4️⃣ Allocation Service
-
-Gestisce:
-
-allocazione dipendenti → progetti
-
-percentuale (es. 50%)
-
-periodo
-
-     */
 
 }

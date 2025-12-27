@@ -1,5 +1,6 @@
 package com.employee.employee.entity;
 
+import com.employee.employee.constant.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,10 +24,15 @@ public class SalaryHistory {
 
     private UUID employeeId;
 
+    private String role;
+
     private BigDecimal salary;
 
     private LocalDate startDate;
 
     private LocalDate endDate;
 
+    public void setRole(Role role) {
+        this.role = role.toString();
+    }
 }

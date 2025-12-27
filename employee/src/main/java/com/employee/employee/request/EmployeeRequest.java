@@ -2,12 +2,15 @@ package com.employee.employee.request;
 
 import com.employee.employee.constant.Level;
 import com.employee.employee.constant.Role;
-import com.employee.employee.dto.DepartmentDto;
+import com.employee.employee.constant.Status;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.UUID;
 
 public record EmployeeRequest(
+
+        String fiscalCode,
 
         String name,
 
@@ -23,9 +26,10 @@ public record EmployeeRequest(
 
         Level level,
 
+        Status status,
+
         BigDecimal salary,
 
-        DepartmentDto department
-
+        UUID managerId
 ) {
 }

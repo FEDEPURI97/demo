@@ -30,13 +30,21 @@ public class Client {
                 .bodyToMono(DepartmentDto.class);
     }
 
-    public Mono<List<ProjectDto>> getProjectsByIds(List<UUID> projectIds) {
+    public Mono<List<ProjectDto>> getProjectsById(List<UUID> projectIds) {
         return webClient.post()
-                .uri(servicesConfig.getProjectUri())
+                .uri(servicesConfig.getProjectsUri())
                 .bodyValue(projectIds)
                 .retrieve()
                 .bodyToFlux(ProjectDto.class)
                 .collectList();
+    }
+
+    public Mono<ProjectDto> getProjectById(UUID projectId) {
+        return webClient.get()
+                .uri(servicesConfig.getProjectUri(), projectId)
+                .retrieve()
+                .bodyToMono(ProjectDto.class);
+
     }
 
 }

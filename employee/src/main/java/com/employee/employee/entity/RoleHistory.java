@@ -17,7 +17,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class HistoryRole {
+public class RoleHistory {
 
     @Id
     private UUID id;

@@ -12,8 +12,6 @@ import org.springframework.data.relational.core.mapping.Table;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Table
@@ -40,9 +38,9 @@ public class Employee {
 
     private UUID departmentId;
 
-    private Role role;
+    private String role;
 
-    private Level level;
+    private String level;
 
     private UUID managerId;
 
@@ -54,6 +52,11 @@ public class Employee {
 
     private BigDecimal salary;
 
-    private  List<UUID> project;
+    public void setRole(Role role) {
+        this.role = role.toString();
+    }
 
+    public void setLevel(Level level) {
+        this.level = level.toString();
+    }
 }

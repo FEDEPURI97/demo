@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,8 +42,6 @@ public class Employee {
 
     private Role role;
 
-    private List<UUID> roles = new ArrayList<>();
-
     private Level level;
 
     private UUID managerId;
@@ -53,8 +52,8 @@ public class Employee {
 
     private Status status;
 
-    private List<UUID> salaryHistory = new ArrayList<>();
+    private BigDecimal salary;
 
-    private  List<UUID> projectHistory = new ArrayList<>();
+    private  List<UUID> project;
 
 }

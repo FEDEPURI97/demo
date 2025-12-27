@@ -1,3 +1,11 @@
 spring:
   application:
     name: employee
+
+services:
+  base:
+    url: {BASE_URL}
+  department:
+    uri: {URI_DEPARTMENT:/departments/{id}}
+  project:
+    uri: {URI_PROJECT:/project/active/batch}

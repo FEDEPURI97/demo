@@ -1,7 +1,6 @@
 package com.employee.employee.service;
 
-import com.employee.employee.client.DepartmentClient;
-import com.employee.employee.client.ProjectClient;
+import com.employee.employee.client.Client;
 import com.employee.employee.constant.Role;
 import com.employee.employee.constant.Status;
 import com.employee.employee.dto.DepartmentDto;
@@ -11,13 +10,12 @@ import com.employee.employee.entity.Employee;
 import com.employee.employee.exception.EntityNotIdException;
 import com.employee.employee.factory.EmployeeMapper;
 import com.employee.employee.repository.EmployeRepository;
-import com.employee.employee.util.Util;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -25,16 +23,12 @@ public class ServiceEmployeeImpl implements ServiceEmployee{
 
     private final EmployeRepository repository;
     private final EmployeeMapper employeeMapper;
-    private final DepartmentClient departmentClient;
-    private final ProjectClient projectClient;
-    private final Util util;
+    private final Client client;
 
-    public ServiceEmployeeImpl(EmployeRepository repository, EmployeeMapper employeeMapper, DepartmentClient departmentClient, ProjectClient projectClient, Util util) {
+    public ServiceEmployeeImpl(EmployeRepository repository, EmployeeMapper employeeMapper, Client client) {
         this.repository = repository;
         this.employeeMapper = employeeMapper;
-        this.departmentClient = departmentClient;
-        this.projectClient = projectClient;
-        this.util = util;
+        this.client = client;
     }
 
     @Override
@@ -45,21 +39,16 @@ public class ServiceEmployeeImpl implements ServiceEmployee{
                 .switchIfEmpty(Mono.error(new EntityNotIdException("")));
 
         Mono<DepartmentDto> departmentDtoMono =  modelMono.flatMap(model ->
-                departmentClient.getDepartmentById(model.getDepartmentId())
-        );
-        Flux<UUID> uuid = modelMono.flatMapMany(model ->
-                Flux.fromIterable(util.filterForActualProject(model.getProjectHistory()))
+                client.getDepartmentById(model.getDepartmentId())
         );
 
-        Flux<ProjectDto> projectDtoFlux = uuid.flatMap(projectClient::getProjectById);
+        Mono<List<ProjectDto>> projectDtoMono = modelMono.flatMap(model ->
+                client.getProjectsByIds(model.getProject())
+        );
 
-        Mono<BigDecimal> salaryMono = modelMono.map(model->
-                util.getActualSalary(model.getSalaryHistory())
-                );
-
-        return Mono.zip(modelMono, salaryMono, projectDtoFlux.collectList(), departmentDtoMono)
+        return Mono.zip(modelMono, projectDtoMono, departmentDtoMono)
                 .map(tuple ->
-                        employeeMapper.toDto(tuple.getT1(), tuple.getT2(), tuple.getT3(), tuple.getT4())
+                        employeeMapper.toDto(tuple.getT1(), tuple.getT2(), tuple.getT3())
                 );
     }
 

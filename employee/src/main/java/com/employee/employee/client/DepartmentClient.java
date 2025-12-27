@@ -3,6 +3,7 @@ package com.employee.employee.client;
 import com.employee.employee.dto.DepartmentDto;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
@@ -17,11 +18,10 @@ public class DepartmentClient {
                 .baseUrl("http://department-service")
                 .build();
     }
-    public DepartmentDto getDepartmentById(UUID departmentId) {
+    public Mono<DepartmentDto> getDepartmentById(UUID departmentId) {
         return webClient.get()
                 .uri("/departments/{id}", departmentId)
                 .retrieve()
-                .bodyToMono(DepartmentDto.class)
-                .block();
+                .bodyToMono(DepartmentDto.class);
     }
 }

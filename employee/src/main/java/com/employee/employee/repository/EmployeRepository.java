@@ -2,19 +2,19 @@ package com.employee.employee.repository;
 
 import com.employee.employee.constant.Role;
 import com.employee.employee.entity.Employee;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 
-import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface EmployeRepository extends JpaRepository<Employee, UUID> {
+public interface EmployeRepository extends ReactiveCrudRepository<Employee, UUID> {
 
-    List<Employee> findByRole(Role role);
+    Flux<Employee> findByRole(Role role);
 
-    List<Employee> findByManagerId(UUID id);
+    Flux<Employee> findByManagerId(UUID id);
 
-    List<Employee> findByDepartmentId(UUID id);
+    Flux<Employee> findByDepartmentId(UUID id);
 
 }

@@ -14,9 +14,10 @@ import com.employee.employee.repository.EmployeRepository;
 import com.employee.employee.util.Util;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -38,47 +39,62 @@ public class ServiceEmployeeImpl implements ServiceEmployee{
 
     @Override
     @Transactional(readOnly = true)
-    public EmployeeDto getEmployeeById(UUID id) {
-        Employee model = repository.findById(id).orElseThrow(()->
-                new EntityNotIdException(""));
-        DepartmentDto departmentDto = departmentClient.getDepartmentById(model.getDepartmentId());
-        List<UUID> projectList = util.filterForActualProject(model.getProjectHistory());
-        List<ProjectDto> projectDto = projectClient.getProjectById(projectList);
-        BigDecimal salary = util.getActualSalary(model.getSalaryHistory());
-        return employeeMapper.toDto(model, salary, projectDto,departmentDto);
+    public Mono<EmployeeDto> getEmployeeById(UUID id) {
+
+        Mono<Employee> modelMono = repository.findById(id)
+                .switchIfEmpty(Mono.error(new EntityNotIdException("")));
+
+        Mono<DepartmentDto> departmentDtoMono =  modelMono.flatMap(model ->
+                departmentClient.getDepartmentById(model.getDepartmentId())
+        );
+        Flux<UUID> uuid = modelMono.flatMapMany(model ->
+                Flux.fromIterable(util.filterForActualProject(model.getProjectHistory()))
+        );
+
+        Flux<ProjectDto> projectDtoFlux = uuid.flatMap(projectClient::getProjectById);
+
+        Mono<BigDecimal> salaryMono = modelMono.map(model->
+                util.getActualSalary(model.getSalaryHistory())
+                );
+
+        return Mono.zip(modelMono, salaryMono, projectDtoFlux.collectList(), departmentDtoMono)
+                .map(tuple ->
+                        employeeMapper.toDto(tuple.getT1(), tuple.getT2(), tuple.getT3(), tuple.getT4())
+                );
     }
 
     @Override
     @Transactional
-    public Employee saveEmployee(Employee employee) {
-        employee = repository.save(employee);
-        return employee;
+    public Mono<Employee> saveEmployee(Employee employee) {
+        return repository.save(employee);
     }
 
     @Override
     @Transactional
-    public String statusUser(Employee employee , Status status) {
+    public Mono<String> statusUser(Employee employee , Status status) {
         employee.setStatus(status);
         repository.save(employee);
-        return String.format("Modifica status in: %s, dello user: %s %s avvenuto con successo",
-                status, employee.getName(), employee.getLastName());
+        return Mono.just(
+                String.format("Modifica status in: %s, dello user: %s %s avvenuto con successo",
+                        status, employee.getName(), employee.getLastName())
+        );
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Employee> getEmployeesByRole(Role role) {
+    public Flux<Employee> getEmployeesByRole(Role role) {
         return repository.findByRole(role);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Employee> getEmployeesByDepartmentId(UUID idDepartment) {
+    public Flux<Employee> getEmployeesByDepartmentId(UUID idDepartment) {
         return repository.findByDepartmentId(idDepartment);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Employee> getEmployeesByManagerId(UUID idManager) {
+    public Flux<Employee> getEmployeesByManagerId(UUID idManager) {
         return repository.findByManagerId(idManager);
     }
 }

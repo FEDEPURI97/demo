@@ -4,9 +4,11 @@ import com.employee.employee.constant.Role;
 import com.employee.employee.constant.Status;
 import com.employee.employee.dto.EmployeeDto;
 import com.employee.employee.request.EmployeeRequest;
+import com.employee.employee.service.ServiceEmployee;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,13 +18,15 @@ import java.util.UUID;
 @RequestMapping("employees")
 public class ControllerEmploye {
 
+    private final ServiceEmployee serviceEmployee;
+
     @GetMapping
     public void getEmployees(){
         //Lista tutti i dipendenti
     }
     @GetMapping("/{id}")
-    public ResponseEntity<EmployeeDto> getEmployee(@PathVariable("id") UUID id){
-        return ResponseEntity.ok(null);
+    public Mono<EmployeeDto> getEmployee(@PathVariable("id") UUID id){
+        return serviceEmployee.getEmployeeById(id);
     }
     @PostMapping
     public ResponseEntity<EmployeeDto> createEmployee(EmployeeRequest request){

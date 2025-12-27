@@ -57,10 +57,7 @@ public class ServiceEmployeeImpl implements ServiceEmployee{
 
         return repositoryEmployee.findById(id)
                 .switchIfEmpty(Mono.error(
-                        new EntityNotIdException(
-                                String.format("L'utente con il seguente id: %s non è stato trovato", id)
-                        )
-                ))
+                        new EntityNotIdException(id)))
                 .flatMap(this::buildEmployeeDto);
     }
 
@@ -88,9 +85,7 @@ public class ServiceEmployeeImpl implements ServiceEmployee{
         return repositoryEmployee.updateStatus(userId, status.name())
                 .flatMap(updated -> {
                     if (updated == 0) {
-                        return Mono.error(new EntityNotIdException(
-                                String.format("L'utente con il seguente id: %s non è stato trovato", userId)
-                        ));
+                        return Mono.error(new EntityNotIdException(userId));
                     }
                     return Mono.just("Status aggiornato con successo");
                 });
@@ -101,9 +96,7 @@ public class ServiceEmployeeImpl implements ServiceEmployee{
     public Mono<String> salaryUser(UUID userId, BigDecimal salary) {
 
         return repositoryEmployee.findById(userId)
-                .switchIfEmpty(Mono.error(new EntityNotIdException(
-                        String.format("L'utente con il seguente id: %s non è stato trovato", userId)))
-                )
+                .switchIfEmpty(Mono.error(new EntityNotIdException(userId)))
                 .flatMap(employee -> {
                     employee.setSalary(salary);
                     Mono<Employee> updateEmployee = repositoryEmployee.save(employee);
@@ -141,14 +134,10 @@ public class ServiceEmployeeImpl implements ServiceEmployee{
     @Transactional
     public Mono<String> addProjectToEmployee(UUID userId, UUID projectId) {
         return repositoryEmployee.findById(userId)
-                .switchIfEmpty(Mono.error(new EntityNotIdException(
-                                String.format("L'utente con il seguente id: %s non è stato trovato", userId)
-                        )))
+                .switchIfEmpty(Mono.error(new EntityNotIdException(userId)))
                 .flatMap(employee ->
                         client.getProjectById(projectId)
-                                .switchIfEmpty(Mono.error(new EntityNotIdException(
-                                        "Progetto con id " + projectId + " non trovato"
-                                )))
+                                .switchIfEmpty(Mono.error(new EntityNotIdException(userId)))
                                 .flatMap(projectDto -> {
                                     ProjectHistory projectHistory = new ProjectHistory();
                                     projectHistory.setProjectId(projectId);
@@ -167,9 +156,7 @@ public class ServiceEmployeeImpl implements ServiceEmployee{
     public Mono<String> updateRole(UUID userId, Role newRole) {
 
         return repositoryEmployee.findById(userId)
-                .switchIfEmpty(Mono.error(new EntityNotIdException(
-                                String.format("L'utente con il seguente id: %s non è stato trovato", userId)
-                        )))
+                .switchIfEmpty(Mono.error(new EntityNotIdException(userId)))
                 .flatMap(employee -> {
                     Mono<Void> closeCurrentRoleHistory =
                             repositoryRoleHistory.findByEmployeeId(userId)

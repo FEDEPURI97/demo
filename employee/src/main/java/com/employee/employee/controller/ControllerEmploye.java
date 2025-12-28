@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.UUID;
-
 @AllArgsConstructor
 @RestController
 @RequestMapping("employees")
@@ -29,7 +27,7 @@ public class ControllerEmploye {
     }
 
     @GetMapping("/{id}")
-    public Mono<EmployeeDto> getEmployee(@PathVariable("id") @NotNull UUID id){
+    public Mono<EmployeeDto> getEmployee(@PathVariable("id") @NotNull Integer id){
         return serviceEmployee.getEmployeeById(id);
     }
 
@@ -44,7 +42,7 @@ public class ControllerEmploye {
     }
 
     @DeleteMapping("/{id}")
-    public Mono<String> deleteEmployee(@PathVariable("id")@NotNull UUID id){
+    public Mono<String> deleteEmployee(@PathVariable("id")@NotNull Integer id){
         return serviceEmployee.deleteEmployee(id);
     }
 

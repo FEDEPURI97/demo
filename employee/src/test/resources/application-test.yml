@@ -1,15 +1,12 @@
 spring:
   r2dbc:
-    url: "r2dbc:h2:mem:///testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
+    url: "r2dbc:h2:mem:///testdb;DB_CLOSE_DELAY=-1;MODE=PostgreSQL"
     username: sa
     password:
-  flyway:
-    enabled: true
-    locations: classpath:db/migration
-  main:
-    web-application-type: reactive
   kafka:
     bootstrap-servers: localhost:9092
     admin:
       auto-create: true
+  main:
+    web-application-type: reactive
 

@@ -1,9 +1,11 @@
 package com.employee.employee.dto;
 
-import java.util.UUID;
-
 public record UserRegisteredDto(
-    UUID id,
+
+    Integer id,
+
     String email,
+
     String activationLink
+
 ){}

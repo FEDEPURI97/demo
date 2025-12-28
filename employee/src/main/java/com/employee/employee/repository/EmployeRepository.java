@@ -11,9 +11,9 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Repository
-public interface EmployeRepository extends ReactiveCrudRepository<Employee, UUID> {
+public interface EmployeRepository extends ReactiveCrudRepository<Employee, Integer> {
 
     @Query("UPDATE employee SET salary = :salary WHERE id = :id")
-    Mono<Integer> updateSalary(UUID userId, BigDecimal salary);
+    Mono<Integer> updateSalary(Integer userId, BigDecimal salary);
 
 }

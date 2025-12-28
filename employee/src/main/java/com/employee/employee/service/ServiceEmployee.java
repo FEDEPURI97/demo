@@ -11,15 +11,15 @@ import java.util.UUID;
 
 public interface ServiceEmployee {
 
-    Mono<EmployeeDto> getEmployeeById(UUID id);
+    Mono<EmployeeDto> getEmployeeById(Integer id);
 
     Mono<EmployeeDto> createEmployee(EmployeeRequest employee);
 
-    Mono<String> updateStatus(UUID employeeId, Status status);
+    Mono<String> updateStatus(Integer employeeId, Status status);
 
-    Mono<String> updateSalary(UUID userId, BigDecimal salary);
+    Mono<String> updateSalary(Integer userId, BigDecimal salary);
 
     Flux<EmployeeDto> getAllEmploye();
 
-    Mono<String> deleteEmployee(UUID id);
+    Mono<String> deleteEmployee(Integer id);
 }

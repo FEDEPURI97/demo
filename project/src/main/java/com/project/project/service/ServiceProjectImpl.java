@@ -43,7 +43,6 @@ public class ServiceProjectImpl implements ServiceProject {
         Project project = mapper.toModelFromRequest(request);
         project.setStartDate(LocalDate.now());
         project.setStatus(ProjectStatus.PLANNED);
-        project.setId(UUID.randomUUID());
         Mono<Project> model = repositoryProject.save(project);
         return model.map(mapper::toDto);
     }

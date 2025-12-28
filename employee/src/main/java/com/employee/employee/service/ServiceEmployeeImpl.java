@@ -18,7 +18,6 @@ import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +28,7 @@ public class ServiceEmployeeImpl implements ServiceEmployee{
     private final EmployeeEventProducer eventProducer;
 
     @Override
-    public Mono<EmployeeDto> getEmployeeById(UUID id) {
+    public Mono<EmployeeDto> getEmployeeById(Integer id) {
         return repositoryEmployee.findById(id)
                 .map(employeeMapper::toDto)
                 .switchIfEmpty(Mono.error(new EmployeeNotIdException(id)));
@@ -38,7 +37,6 @@ public class ServiceEmployeeImpl implements ServiceEmployee{
     @Override
     public Mono<EmployeeDto> createEmployee(EmployeeRequest request) {
         Employee employee = employeeMapper.toModelFromRequest(request);
-        employee.setId(UUID.randomUUID());
         employee.setEmployeeCode(request.fiscalCode());
         employee.setStatus(Status.SUSPENDED);
         employee.setHireDate(LocalDate.now());
@@ -58,7 +56,7 @@ public class ServiceEmployeeImpl implements ServiceEmployee{
 
 
     @Override
-    public Mono<String> updateStatus(UUID userId , Status status) {
+    public Mono<String> updateStatus(Integer userId , Status status) {
         return repositoryEmployee.findById(userId)
                 .flatMap(employee -> {
                     employee.setStatus(status);
@@ -71,7 +69,7 @@ public class ServiceEmployeeImpl implements ServiceEmployee{
     }
 
     @Override
-    public Mono<String> updateSalary(UUID userId, BigDecimal salary) {
+    public Mono<String> updateSalary(Integer userId, BigDecimal salary) {
         return repositoryEmployee.updateSalary(userId, salary)
                 .flatMap(updated -> {
                     if (updated == 0) {
@@ -88,7 +86,7 @@ public class ServiceEmployeeImpl implements ServiceEmployee{
     }
 
     @Override
-    public Mono<String> deleteEmployee(UUID id) {
+    public Mono<String> deleteEmployee(Integer id) {
         return repositoryEmployee.findById(id)
                 .switchIfEmpty(Mono.error(new EmployeeNotIdException(id)))
                 .flatMap(employee ->

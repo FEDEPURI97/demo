@@ -20,7 +20,7 @@ import java.util.UUID;
 public class Employee {
 
     @Id
-    private UUID id;
+    private Integer id;
 
     private String name;
 

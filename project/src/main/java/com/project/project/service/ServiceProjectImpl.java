@@ -8,6 +8,7 @@ import com.project.project.factory.ProjectMapper;
 import com.project.project.model.Project;
 import com.project.project.repository.ProjectRepository;
 import com.project.project.request.ProjectsRequest;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -17,15 +18,11 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class ServiceProjectImpl implements ServiceProject {
 
     private final ProjectRepository repositoryProject;
     private final ProjectMapper mapper;
-
-    public ServiceProjectImpl(ProjectRepository repositoryProject,ProjectMapper mapper) {
-        this.repositoryProject = repositoryProject;
-        this.mapper = mapper;
-    }
 
 
     @Override

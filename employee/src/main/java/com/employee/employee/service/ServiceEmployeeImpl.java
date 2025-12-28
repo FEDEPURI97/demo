@@ -2,12 +2,15 @@ package com.employee.employee.service;
 
 import com.employee.employee.constant.Status;
 import com.employee.employee.dto.EmployeeDto;
+import com.employee.employee.dto.UserRegisteredDto;
 import com.employee.employee.entity.Employee;
+import com.employee.employee.event.EmployeeEventProducer;
 import com.employee.employee.exception.DuplicateCustomException;
 import com.employee.employee.exception.EmployeeNotIdException;
 import com.employee.employee.factory.EmployeeMapper;
 import com.employee.employee.repository.EmployeRepository;
 import com.employee.employee.request.EmployeeRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,15 +23,12 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class ServiceEmployeeImpl implements ServiceEmployee{
 
     private final EmployeRepository repositoryEmployee;
     private final EmployeeMapper employeeMapper;
-
-    public ServiceEmployeeImpl(EmployeRepository repositoryEmployee, EmployeeMapper employeeMapper) {
-        this.repositoryEmployee = repositoryEmployee;
-        this.employeeMapper = employeeMapper;
-    }
+    private final EmployeeEventProducer eventProducer;
 
     @Override
     @Transactional(readOnly = true)
@@ -46,15 +46,20 @@ public class ServiceEmployeeImpl implements ServiceEmployee{
         employee.setEmployeeCode(request.fiscalCode());
         employee.setStatus(Status.SUSPENDED);
         employee.setHireDate(LocalDate.now());
-        Mono<Employee> model = repositoryEmployee.save(employee)
+        return repositoryEmployee.save(employee)
                 .onErrorMap(e -> {
                     if (e instanceof DuplicateKeyException || e instanceof DataIntegrityViolationException) {
                         return new DuplicateCustomException("Email o codice fiscale già presente");
                     }
                     return e;
-                });
-        return model.map(employeeMapper::toDto);
+                })
+                .flatMap(savedEmployee -> eventProducer.sendUserRegisteredEvent(
+                        employeeMapper.toRegisteredDto(employee,
+                                "https://tuosito.com/activate/" + savedEmployee.getId()))
+                        .thenReturn(employeeMapper.toDto(savedEmployee)));
     }
+
+
 
     @Transactional
     public Mono<String> updateStatus(UUID userId , Status status) {

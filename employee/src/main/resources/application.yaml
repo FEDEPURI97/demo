@@ -4,6 +4,10 @@ spring:
   flyway:
     enabled: true
     locations: classpath:db/migration
+  kafka:
+    bootstrap-servers: localhost:9092
+    admin:
+      auto-create: true
 
   r2dbc:
     url: ${DB_URL}

@@ -1,6 +1,7 @@
 package com.employee.employee.factory;
 
 import com.employee.employee.dto.EmployeeDto;
+import com.employee.employee.dto.UserRegisteredDto;
 import com.employee.employee.entity.Employee;
 import com.employee.employee.request.EmployeeRequest;
 import org.mapstruct.Mapper;
@@ -12,4 +13,5 @@ public interface EmployeeMapper {
 
     EmployeeDto toDto(Employee employee);
 
+    UserRegisteredDto toRegisteredDto(Employee employee, String activationLink);
 }

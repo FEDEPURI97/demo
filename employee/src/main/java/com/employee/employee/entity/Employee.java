@@ -1,7 +1,5 @@
 package com.employee.employee.entity;
 
-import com.employee.employee.constant.Level;
-import com.employee.employee.constant.Role;
 import com.employee.employee.constant.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,14 +34,6 @@ public class Employee {
 
     private String employeeCode;
 
-    private UUID departmentId;
-
-    private String role;
-
-    private String level;
-
-    private UUID managerId;
-
     private LocalDate hireDate;
 
     private LocalDate endDate;
@@ -52,11 +42,4 @@ public class Employee {
 
     private BigDecimal salary;
 
-    public void setRole(Role role) {
-        this.role = role.toString();
-    }
-
-    public void setLevel(Level level) {
-        this.level = level.toString();
-    }
 }

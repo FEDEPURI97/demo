@@ -1,6 +1,6 @@
-package com.employee.employee.entity;
+package com.project.project.model;
 
-import com.employee.employee.constant.Status;
+import com.project.project.constant.ProjectStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,33 +17,27 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Employee {
+public class Project {
 
     @Id
     private UUID id;
 
     private String name;
 
-    private String lastName;
+    private String description;
 
-    private String email;
-
-    private String phoneNumber;
-
-    private LocalDate dateOfBirth;
-
-    private String employeeCode;
-
-    private LocalDate hireDate;
+    private LocalDate startDate;
 
     private LocalDate endDate;
 
     private String status;
 
-    private BigDecimal salary;
+    private BigDecimal budget;
+/*
+    private List<UUID> employeeId;*/
 
-    public void setStatus(Status status){
+    public void setStatus(ProjectStatus status){
         this.status = status.toString();
     }
-
 }
+

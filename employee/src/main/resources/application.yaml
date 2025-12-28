@@ -15,13 +15,3 @@ spring:
 
   main:
     web-application-type: reactive
-
-services:
-  base:
-    url: ${BASE_URL}
-  department:
-    uri: "/department/{id}"
-  projects:
-    uri: "/project/active/batch"
-  project:
-    uri: "/project/{id}"

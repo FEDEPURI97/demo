@@ -2,7 +2,6 @@ package com.employee.employee.service;
 
 import com.employee.employee.constant.Status;
 import com.employee.employee.dto.EmployeeDto;
-import com.employee.employee.dto.UserRegisteredDto;
 import com.employee.employee.entity.Employee;
 import com.employee.employee.event.EmployeeEventProducer;
 import com.employee.employee.exception.DuplicateCustomException;
@@ -13,7 +12,6 @@ import com.employee.employee.request.EmployeeRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.yaml.snakeyaml.constructor.DuplicateKeyException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -31,7 +29,6 @@ public class ServiceEmployeeImpl implements ServiceEmployee{
     private final EmployeeEventProducer eventProducer;
 
     @Override
-    @Transactional(readOnly = true)
     public Mono<EmployeeDto> getEmployeeById(UUID id) {
         return repositoryEmployee.findById(id)
                 .map(employeeMapper::toDto)
@@ -39,7 +36,6 @@ public class ServiceEmployeeImpl implements ServiceEmployee{
     }
 
     @Override
-    @Transactional
     public Mono<EmployeeDto> createEmployee(EmployeeRequest request) {
         Employee employee = employeeMapper.toModelFromRequest(request);
         employee.setId(UUID.randomUUID());
@@ -61,7 +57,7 @@ public class ServiceEmployeeImpl implements ServiceEmployee{
 
 
 
-    @Transactional
+    @Override
     public Mono<String> updateStatus(UUID userId , Status status) {
         return repositoryEmployee.findById(userId)
                 .flatMap(employee -> {
@@ -74,7 +70,7 @@ public class ServiceEmployeeImpl implements ServiceEmployee{
                 }).switchIfEmpty(Mono.error(new EmployeeNotIdException(userId)));
     }
 
-    @Transactional
+    @Override
     public Mono<String> updateSalary(UUID userId, BigDecimal salary) {
         return repositoryEmployee.updateSalary(userId, salary)
                 .flatMap(updated -> {
@@ -92,7 +88,6 @@ public class ServiceEmployeeImpl implements ServiceEmployee{
     }
 
     @Override
-    @Transactional
     public Mono<String> deleteEmployee(UUID id) {
         return repositoryEmployee.findById(id)
                 .switchIfEmpty(Mono.error(new EmployeeNotIdException(id)))

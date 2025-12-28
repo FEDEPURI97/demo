@@ -7,6 +7,8 @@ import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.ReactiveTransactionManager;
+import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.kafka.sender.KafkaSender;
 import reactor.kafka.sender.SenderOptions;
 
@@ -14,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-public class KafkaProducerConfig {
+public class Config {
 
     @Bean
     public KafkaSender<String, UserRegisteredDto> kafkaSender() {
@@ -29,5 +31,10 @@ public class KafkaProducerConfig {
     @Bean
     public NewTopic userRegisteredTopic() {
         return new NewTopic("user-registered", 3, (short) 1);
+    }
+
+    @Bean
+    TransactionalOperator transactionalOperator(ReactiveTransactionManager txManager) {
+        return TransactionalOperator.create(txManager);
     }
 }

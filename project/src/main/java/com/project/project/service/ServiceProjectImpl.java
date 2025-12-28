@@ -53,11 +53,14 @@ public class ServiceProjectImpl implements ServiceProject {
 
     @Override
     public Mono<String> updateStatus(UUID id, ProjectStatus status) {
-        return repositoryProject.updateStatus(id, status.name())
-                .flatMap(updated -> {
-                    if (updated == 0) {
-                        return Mono.error(new ProjectNotIdException(id));
+        return repositoryProject.findById(id)
+                .switchIfEmpty(Mono.error(new ProjectNotIdException(id)))
+                .flatMap(project -> {
+                    project.setStatus(status);
+                    if (status.equals(ProjectStatus.COMPLETED)) {
+                        project.setEndDate(LocalDate.now());
                     }
+                    repositoryProject.save(project);
                     return Mono.just("Status aggiornato con successo");
                 });
     }
@@ -86,11 +89,12 @@ public class ServiceProjectImpl implements ServiceProject {
     @Override
     public Mono<String> updateEndDate(UUID id, LocalDate date) {
         return repositoryProject.findById(id)
+                .switchIfEmpty(Mono.error(new ProjectNotIdException(id)))
                 .flatMap(project -> {
                     if (date.isAfter(project.getStartDate())) throw new DateException();
                     project.setEndDate(date);
                     repositoryProject.save(project);
                     return Mono.just("Fine data aggiornata con successo");
-                }).switchIfEmpty(Mono.error(new ProjectNotIdException(id)));
+                });
     }
 }

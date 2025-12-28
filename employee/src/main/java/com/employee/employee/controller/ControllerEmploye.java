@@ -1,13 +1,11 @@
 package com.employee.employee.controller;
 
-import com.employee.employee.constant.Status;
 import com.employee.employee.dto.EmployeeDto;
 import com.employee.employee.request.EmployeeRequest;
 import com.employee.employee.request.SalaryRequest;
 import com.employee.employee.request.StatusRequest;
 import com.employee.employee.service.ServiceEmployee;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 @AllArgsConstructor

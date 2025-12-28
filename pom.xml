@@ -118,8 +118,6 @@
 
 	<modules>
 		<module>employee</module>
-		<module>asset</module>
-		<module>allocation</module>
 		<module>project</module>
 	</modules>
 

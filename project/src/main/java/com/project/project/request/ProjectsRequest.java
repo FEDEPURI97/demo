@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public record ProjectsRequest(
 
@@ -14,7 +15,9 @@ public record ProjectsRequest(
         String description,
         @NotNull(message = "Salary non può essere nulla")
         @DecimalMin(value = "0.0", inclusive = false, message = "Salary deve essere maggiore di 0")
-        BigDecimal budget
+        BigDecimal budget,
+
+        LocalDate endDate
 
 ) {
 }

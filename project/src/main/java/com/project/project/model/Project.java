@@ -33,8 +33,6 @@ public class Project {
     private String status;
 
     private BigDecimal budget;
-/*
-    private List<UUID> employeeId;*/
 
     public void setStatus(ProjectStatus status){
         this.status = status.toString();

@@ -1,7 +1,7 @@
 package com.project.project.controller;
 
-import com.employee.employee.exception.DuplicateCustomException;
-import com.employee.employee.exception.EntityNotIdException;
+import com.project.project.exception.DateException;
+import com.project.project.exception.ProjectNotIdException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -22,13 +22,13 @@ public class GlobalExceptionHandler {
         return Mono.just(ResponseEntity.badRequest().body(errors));
     }
 
-    @ExceptionHandler(DuplicateCustomException.class)
-    public Mono<ResponseEntity<String>> duplicateErrors(DuplicateCustomException ex) {
+    @ExceptionHandler(ProjectNotIdException.class)
+    public Mono<ResponseEntity<String>> entityNotIdErrors(ProjectNotIdException ex) {
         return Mono.just(ResponseEntity.badRequest().body(ex.getMessage()));
     }
 
-    @ExceptionHandler(EntityNotIdException.class)
-    public Mono<ResponseEntity<String>> entityNotIdErrors(EntityNotIdException ex) {
+    @ExceptionHandler(DateException.class)
+    public Mono<ResponseEntity<String>> dataErrors(DateException ex) {
         return Mono.just(ResponseEntity.badRequest().body(ex.getMessage()));
     }
 

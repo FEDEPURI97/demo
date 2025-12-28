@@ -6,6 +6,8 @@ import com.project.project.request.ProjectsRequest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.UUID;
 
 public interface ServiceProject {
@@ -20,5 +22,7 @@ public interface ServiceProject {
 
     Mono<String> deleteProjects(UUID id);
 
-    Mono<String> updateSalary(UUID uuid, UUID uuid1);
+    Mono<String> updateBudget(UUID id, BigDecimal budget);
+
+    Mono<String> updateEndDate(UUID id,LocalDate date);
 }

@@ -1,7 +1,7 @@
 package com.employee.employee.controller;
 
 import com.employee.employee.exception.DuplicateCustomException;
-import com.employee.employee.exception.EntityNotIdException;
+import com.employee.employee.exception.EmployeeNotIdException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -27,8 +27,8 @@ public class GlobalExceptionHandler {
         return Mono.just(ResponseEntity.badRequest().body(ex.getMessage()));
     }
 
-    @ExceptionHandler(EntityNotIdException.class)
-    public Mono<ResponseEntity<String>> entityNotIdErrors(EntityNotIdException ex) {
+    @ExceptionHandler(EmployeeNotIdException.class)
+    public Mono<ResponseEntity<String>> entityNotIdErrors(EmployeeNotIdException ex) {
         return Mono.just(ResponseEntity.badRequest().body(ex.getMessage()));
     }
 

@@ -13,8 +13,6 @@ import java.util.UUID;
 @Repository
 public interface EmployeRepository extends ReactiveCrudRepository<Employee, UUID> {
 
-    @Query("UPDATE employee SET status = :status WHERE id = :id")
-    Mono<Integer> updateStatus(UUID id, String status);
     @Query("UPDATE employee SET salary = :salary WHERE id = :id")
     Mono<Integer> updateSalary(UUID userId, BigDecimal salary);
 

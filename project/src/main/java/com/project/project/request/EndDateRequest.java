@@ -2,15 +2,15 @@ package com.project.project.request;
 
 import jakarta.validation.constraints.NotNull;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
-public record EmployeeProjectRequest(
+public record EndDateRequest(
 
         @NotNull
-        UUID idUser,
-
+        UUID id,
         @NotNull
-        UUID idProject
+        LocalDate date
 
 ) {
 }

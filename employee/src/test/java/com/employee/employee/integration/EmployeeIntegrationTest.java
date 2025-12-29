@@ -1,8 +1,10 @@
 package com.employee.employee.integration;
 
+import com.employee.employee.constant.StatusEmployee;
 import com.employee.employee.dto.EmployeeDto;
 import com.employee.employee.dto.UserRegisteredDto;
 import com.employee.employee.request.EmployeeRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -24,9 +26,9 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+@Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 @ActiveProfiles("test")
@@ -55,7 +57,7 @@ class EmployeeIntegrationTest {
                 LocalDate.of(1980,1,1),
                 new BigDecimal("3000")
         );
-
+        log.info("Call post method employees body: {}", request);
         webTestClient.post().uri("/employees")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(request)
@@ -64,7 +66,10 @@ class EmployeeIntegrationTest {
                 .expectBody(EmployeeDto.class)
                 .value(employee -> {
                     assertNotNull(employee.employeeCode());
+                    assertEquals("RSSMRA80A01H501U",employee.employeeCode());
+                    assertEquals("1234567890",employee.phoneNumber());
                     assertEquals("mario.rossi@email.it", employee.email());
+                    assertEquals(StatusEmployee.SUSPENDED, employee.status());
                 });
     }
 }

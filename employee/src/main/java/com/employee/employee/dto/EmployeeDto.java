@@ -1,6 +1,6 @@
 package com.employee.employee.dto;
 
-import com.employee.employee.constant.Status;
+import com.employee.employee.constant.StatusEmployee;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -23,7 +23,7 @@ public record EmployeeDto(
 
         LocalDate endDate,
 
-        Status status,
+        StatusEmployee status,
 
         BigDecimal salary
 

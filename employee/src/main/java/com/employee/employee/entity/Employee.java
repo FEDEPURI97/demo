@@ -1,6 +1,6 @@
 package com.employee.employee.entity;
 
-import com.employee.employee.constant.Status;
+import com.employee.employee.constant.StatusEmployee;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +10,6 @@ import org.springframework.data.relational.core.mapping.Table;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Table
 @Getter
@@ -42,8 +41,8 @@ public class Employee {
 
     private BigDecimal salary;
 
-    public void setStatus(Status status){
-        this.status = status.toString();
+    public void setStatus(StatusEmployee statusEmployee){
+        this.status = statusEmployee.toString();
     }
 
 }

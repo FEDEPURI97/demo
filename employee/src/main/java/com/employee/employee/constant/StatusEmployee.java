@@ -1,6 +1,6 @@
 package com.employee.employee.constant;
 
-public enum Status {
+public enum StatusEmployee {
     ACTIVE,
     SUSPENDED,
     TERMINATED,

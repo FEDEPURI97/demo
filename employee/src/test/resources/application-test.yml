@@ -3,13 +3,22 @@ spring:
     url: "r2dbc:h2:mem:///testdb;DB_CLOSE_DELAY=-1;MODE=PostgreSQL"
     username: sa
     password: ""
+
   sql:
     init:
       mode: always
       schema-locations: classpath:schema.sql
       separator: ";"
+
   kafka:
     bootstrap-servers: localhost:9092
+    producer:
+      acks: all
+      retries: 1
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      max-in-flight-requests-per-connection: 5
+      delivery-timeout-ms: 60000
     admin:
       auto-create: true
       close-timeout: 0s

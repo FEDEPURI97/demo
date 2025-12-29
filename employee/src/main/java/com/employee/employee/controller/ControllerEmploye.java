@@ -38,7 +38,7 @@ public class ControllerEmploye {
 
     @PutMapping("/status")
     public Mono<String> statusEmployee(@RequestBody @Valid StatusRequest request){
-        return serviceEmployee.updateStatus(request.id(), request.status());
+        return serviceEmployee.updateStatus(request.id(), request.statusEmployee());
     }
 
     @DeleteMapping("/{id}")

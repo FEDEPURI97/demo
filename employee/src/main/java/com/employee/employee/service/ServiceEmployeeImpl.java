@@ -1,6 +1,6 @@
 package com.employee.employee.service;
 
-import com.employee.employee.constant.Status;
+import com.employee.employee.constant.StatusEmployee;
 import com.employee.employee.dto.EmployeeDto;
 import com.employee.employee.entity.Employee;
 import com.employee.employee.event.EmployeeEventProducer;
@@ -38,7 +38,7 @@ public class ServiceEmployeeImpl implements ServiceEmployee{
     public Mono<EmployeeDto> createEmployee(EmployeeRequest request) {
         Employee employee = employeeMapper.toModelFromRequest(request);
         employee.setEmployeeCode(request.fiscalCode());
-        employee.setStatus(Status.SUSPENDED);
+        employee.setStatus(StatusEmployee.SUSPENDED);
         employee.setHireDate(LocalDate.now());
         return repositoryEmployee.save(employee)
                 .onErrorMap(e -> {
@@ -56,11 +56,11 @@ public class ServiceEmployeeImpl implements ServiceEmployee{
 
 
     @Override
-    public Mono<String> updateStatus(Integer userId , Status status) {
+    public Mono<String> updateStatus(Integer userId , StatusEmployee statusEmployee) {
         return repositoryEmployee.findById(userId)
                 .flatMap(employee -> {
-                    employee.setStatus(status);
-                    if (status.equals(Status.TERMINATED)) {
+                    employee.setStatus(statusEmployee);
+                    if (statusEmployee.equals(StatusEmployee.TERMINATED)) {
                         employee.setEndDate(LocalDate.now());
                     }
                     repositoryEmployee.save(employee);

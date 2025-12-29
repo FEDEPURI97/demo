@@ -70,13 +70,12 @@ public class ServiceEmployeeImpl implements ServiceEmployee{
 
     @Override
     public Mono<String> updateSalary(Integer userId, BigDecimal salary) {
-        return repositoryEmployee.updateSalary(userId, salary)
-                .flatMap(updated -> {
-                    if (updated == 0) {
-                        return Mono.error(new EmployeeNotIdException(userId));
-                    }
+        return repositoryEmployee.findById(userId)
+                .flatMap(employee -> {
+                    employee.setSalary(salary);
+                    repositoryEmployee.save(employee);
                     return Mono.just("Salario aggiornato con successo");
-                });
+                }).switchIfEmpty(Mono.error(new EmployeeNotIdException(userId)));
     }
 
     @Override

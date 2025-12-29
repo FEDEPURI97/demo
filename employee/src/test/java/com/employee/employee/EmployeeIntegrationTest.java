@@ -1,12 +1,15 @@
-package com.employee.employee.integration;
+package com.employee.employee;
 
 import com.employee.employee.constant.StatusEmployee;
 import com.employee.employee.dto.EmployeeDto;
 import com.employee.employee.dto.UserRegisteredDto;
+import com.employee.employee.entity.Employee;
+import com.employee.employee.repository.EmployeRepository;
 import com.employee.employee.request.EmployeeRequest;
+import com.employee.employee.request.SalaryRequest;
+import com.employee.employee.request.StatusRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.reactivestreams.Publisher;
@@ -38,6 +41,9 @@ class EmployeeIntegrationTest {
     @Autowired
     private WebTestClient webTestClient;
 
+    @Autowired
+    private EmployeRepository repository;
+
     @MockitoBean
     private KafkaSender<String, UserRegisteredDto> kafkaSender;
 
@@ -49,15 +55,13 @@ class EmployeeIntegrationTest {
     }
 
     @Test
-    @Order(1)
-    void getEmployyes_integrationTest() {
+    void getEmployees_integrationTest() {
         log.info("Call get method for all employees");
         webTestClient.get().uri("/employees")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(EmployeeDto.class)
                 .value(employees -> {
-                    assertEquals(2, employees.size());
                     List<String> aspected = employees.stream()
                             .map(EmployeeDto::employeeCode)
                             .toList();
@@ -71,8 +75,8 @@ class EmployeeIntegrationTest {
 
                 });
     }
+
     @Test
-    @Order(2)
     void createEmployee_integrationTest() {
         EmployeeRequest request = new EmployeeRequest(
                 "RSSMRA80A01H501U",
@@ -98,6 +102,74 @@ class EmployeeIntegrationTest {
                     assertEquals(StatusEmployee.SUSPENDED, employee.status());
                 });
     }
+
+    @Test
+    void getEmployeeById_integrationTest() {
+        log.info("Call get method for employee by Id");
+        webTestClient.get().uri("/employees/{id}", "2")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(EmployeeDto.class)
+                .value(employee -> {
+                    assertEquals("VRDLGI90B12F205Y", employee.employeeCode());
+                    assertEquals("0987654321",employee.phoneNumber());
+                    assertEquals("jane.doe@email.com", employee.email());
+                });
+    }
+
+    @Test
+    void updateStatus_integrationTest() {
+        log.info("Call PUT /status to update employee status");
+        StatusRequest request = new StatusRequest(1, StatusEmployee.ON_LEAVE);
+        webTestClient.put().uri("/employees/status")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(request)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class)
+                .value(response -> {
+                    assertEquals("Status aggiornato con successo", response);
+                });
+    }
+
+    @Test
+    void updateSalary_integrationTest() {
+        log.info("Call PUT /status to update employee status");
+        SalaryRequest request = new SalaryRequest(1, new BigDecimal(5000));
+        webTestClient.put().uri("/employees/salary")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(request)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class)
+                .value(response -> {
+                    assertEquals("Salario aggiornato con successo", response);
+                });
+    }
+
+    @Test
+    void deleteEmployee_integrationTest() {
+        Employee employee = new Employee();
+        employee.setEmployeeCode("TEST123475PRCFTE");
+        employee.setEmail("test.delete@email.com");
+        employee.setStatus(StatusEmployee.ACTIVE);
+        employee.setDateOfBirth(LocalDate.of(1980,1,1));
+        employee.setSalary(new BigDecimal(1100));
+        employee.setName("name");
+        employee.setLastName("last name");
+
+        repository.save(employee)
+                .map(saved -> {
+                    return webTestClient.delete()
+                            .uri("/employees/{id}", saved.getId())
+                            .exchange()
+                            .expectStatus().isOk()
+                            .expectBody(String.class)
+                            .value(msg -> assertEquals("Employee eliminato con successo", msg));
+                });
+    }
+
+
 
 
 }

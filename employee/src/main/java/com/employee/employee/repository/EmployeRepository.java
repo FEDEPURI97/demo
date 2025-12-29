@@ -13,7 +13,4 @@ import java.util.UUID;
 @Repository
 public interface EmployeRepository extends ReactiveCrudRepository<Employee, Integer> {
 
-    @Query("UPDATE employee SET salary = :salary WHERE id = :id")
-    Mono<Integer> updateSalary(Integer userId, BigDecimal salary);
-
 }

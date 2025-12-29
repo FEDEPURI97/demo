@@ -18,5 +18,5 @@ CREATE TABLE employee (
 
 INSERT INTO employee (name, last_name, email, phone_number, date_of_birth, employee_code, status, salary)
 VALUES 
-('Test', 'User', 'test.user@email.com', '1234567890', '1990-01-01', 'EMP0001', 'ACTIVE', 3000.00),
-('Jane', 'Doe', 'jane.doe@email.com', '0987654321', '1985-05-15', 'EMP0002', 'ACTIVE', 4000.00);
+('Test', 'User', 'test.user@email.com', '1234567890', '1990-01-01', 'RSSMRA80A01H501A', 'ACTIVE', 3000.00),
+('Jane', 'Doe', 'jane.doe@email.com', '0987654321', '1985-05-15', 'VRDLGI90B12F205Y', 'ACTIVE', 4000.00);

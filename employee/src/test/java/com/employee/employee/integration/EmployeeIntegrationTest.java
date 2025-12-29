@@ -6,6 +6,7 @@ import com.employee.employee.dto.UserRegisteredDto;
 import com.employee.employee.request.EmployeeRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.reactivestreams.Publisher;
@@ -22,10 +23,10 @@ import reactor.kafka.sender.SenderRecord;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @Slf4j
@@ -46,7 +47,32 @@ class EmployeeIntegrationTest {
                 ArgumentMatchers.<Publisher<SenderRecord<String, UserRegisteredDto, UUID>>>any()
         )).thenReturn(Flux.empty());
     }
+
     @Test
+    @Order(1)
+    void getEmployyes_integrationTest() {
+        log.info("Call get method for all employees");
+        webTestClient.get().uri("/employees")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(EmployeeDto.class)
+                .value(employees -> {
+                    assertEquals(2, employees.size());
+                    List<String> aspected = employees.stream()
+                            .map(EmployeeDto::employeeCode)
+                            .toList();
+                    assertTrue(aspected.contains("RSSMRA80A01H501A"));
+                    assertTrue(aspected.contains("VRDLGI90B12F205Y"));
+                    aspected = employees.stream()
+                            .map(EmployeeDto::email)
+                            .toList();
+                    assertTrue(aspected.contains("test.user@email.com"));
+                    assertTrue(aspected.contains("jane.doe@email.com"));
+
+                });
+    }
+    @Test
+    @Order(2)
     void createEmployee_integrationTest() {
         EmployeeRequest request = new EmployeeRequest(
                 "RSSMRA80A01H501U",
@@ -72,4 +98,6 @@ class EmployeeIntegrationTest {
                     assertEquals(StatusEmployee.SUSPENDED, employee.status());
                 });
     }
+
+
 }

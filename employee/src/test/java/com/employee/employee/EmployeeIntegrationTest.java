@@ -55,6 +55,31 @@ class EmployeeIntegrationTest {
     }
 
     @Test
+    void createEmployee_validationError_integrationTest() {
+        EmployeeRequest invalidRequest = new EmployeeRequest(
+                "RSSMRA80A01H501U",
+                "",
+                "Rossi",
+                "invalid-email",
+                "1234567890",
+                LocalDate.of(1980, 1, 1),
+                new BigDecimal("3000")
+        );
+
+        webTestClient.post().uri("/employees")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(invalidRequest)
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody(String.class)
+                .value(errorMessage -> {
+                    assertTrue(errorMessage.contains("Nome non può essere vuoto"));
+                    assertTrue(errorMessage.contains("Email non valida"));
+                });
+    }
+
+
+    @Test
     void getEmployees_integrationTest() {
         log.info("Call get method for all employees");
         webTestClient.get().uri("/employees")
@@ -73,6 +98,40 @@ class EmployeeIntegrationTest {
                     assertTrue(aspected.contains("test.user@email.com"));
                     assertTrue(aspected.contains("jane.doe@email.com"));
 
+                });
+    }
+
+    @Test
+    void getEmployee_notId_integrationTest() {
+        log.info("Call get method for employee by Id");
+        webTestClient.get().uri("/employees/{id}", "10")
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody(String.class)
+                .value(errorMessage -> {
+                    assertEquals("L'utente con il seguente id: 10 non è stato trovato",errorMessage);
+                });
+    }
+
+    @Test
+    void createEmployee_duplicate_integrationTest() {
+        EmployeeRequest invalidRequest = new EmployeeRequest(
+                "RSSMRA80A01H501U",
+                "Mario",
+                "Rossi",
+                "test.user@email.com",
+                "1234567890",
+                LocalDate.of(1980, 1, 1),
+                new BigDecimal("3000")
+        );
+        webTestClient.post().uri("/employees")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(invalidRequest)
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody(String.class)
+                .value(errorMessage -> {
+                    assertEquals("Email o codice fiscale già presente",errorMessage);
                 });
     }
 
@@ -149,24 +208,28 @@ class EmployeeIntegrationTest {
 
     @Test
     void deleteEmployee_integrationTest() {
-        Employee employee = new Employee();
-        employee.setEmployeeCode("TEST123475PRCFTE");
-        employee.setEmail("test.delete@email.com");
-        employee.setStatus(StatusEmployee.ACTIVE);
-        employee.setDateOfBirth(LocalDate.of(1980,1,1));
-        employee.setSalary(new BigDecimal(1100));
-        employee.setName("name");
-        employee.setLastName("last name");
+        Employee employee = new Employee(
+                null,
+                "name",
+                "lastname",
+                "test.delete@email.com",
+                "",
+                LocalDate.of(1980,1,1),
+                "TEST123475PRCFTE",
+                LocalDate.now(),
+                null,
+                StatusEmployee.ON_LEAVE.name(),
+                new BigDecimal(1100)
+        );
 
-        repository.save(employee)
-                .map(saved -> {
-                    return webTestClient.delete()
-                            .uri("/employees/{id}", saved.getId())
-                            .exchange()
-                            .expectStatus().isOk()
-                            .expectBody(String.class)
-                            .value(msg -> assertEquals("Employee eliminato con successo", msg));
-                });
+        Employee saved = repository.save(employee).block();
+        assertNotNull(saved);
+        webTestClient.delete()
+                .uri("/employees/{id}", saved.getId())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class)
+                .value(msg -> assertEquals("Employee eliminato con successo", msg));
     }
 
 

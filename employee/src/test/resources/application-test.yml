@@ -11,15 +11,17 @@ spring:
       separator: ";"
 
   kafka:
+    bootstrap-servers: kafka-broker1:9092,kafka-broker2:9092,kafka-broker3:9092
     producer:
       acks: all
-      retries: 1
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      retries: 3
       max-in-flight-requests-per-connection: 5
-      delivery-timeout-ms: 60000
+      delivery-timeout-ms: 120000
     admin:
-      close-timeout: 0s
+      auto-create: false
+      properties:
+        request.timeout.ms: 30000
+        retries: 3
 
   main:
     web-application-type: reactive

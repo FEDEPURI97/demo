@@ -4,6 +4,7 @@ import com.employee.employee.dto.UserRegisteredDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import reactor.kafka.sender.KafkaSender;
@@ -16,10 +17,12 @@ import java.util.UUID;
 @Log4j2
 public class EmployeeEventProducer {
 
+    @Value("${app.activation.register-topic}")
+    private String topicRegister;
     private final KafkaSender<String, UserRegisteredDto> kafkaSender;
 
     public Mono<Void> sendUserRegisteredEvent(UserRegisteredDto event) {
-        ProducerRecord<String, UserRegisteredDto> producer = new ProducerRecord<>("user-registered", event.id().toString(), event);
+        ProducerRecord<String, UserRegisteredDto> producer = new ProducerRecord<>(topicRegister, event.id().toString(), event);
         SenderRecord<String, UserRegisteredDto, UUID> senderRecord = SenderRecord.create(producer, UUID.randomUUID());
         return kafkaSender.send(Mono.just(senderRecord))
                 .doOnError(e -> log.error("Errore invio evento: {}", e.getMessage()))

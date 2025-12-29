@@ -6,8 +6,6 @@ spring:
     producer:
       acks: all
       retries: 3
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       max-in-flight-requests-per-connection: 5
       delivery-timeout-ms: 120000
     admin:
@@ -25,7 +23,7 @@ spring:
 
 app:
   activation:
-    url: "https://tuosito.com/activate/"
+    register-topic: "https://tuosito.com/activate/"
 
   main:
     web-application-type: reactive

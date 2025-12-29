@@ -20,6 +20,16 @@ public class Config {
 
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
+    @Value("${spring.kafka.producer.acks}")
+    private String acks;
+    @Value("${spring.kafka.producer.retries}")
+    private String retries;
+    @Value("${spring.kafka.producer.max-in-flight-requests-per-connection}")
+    private String maxInFlight;
+    @Value("${spring.kafka.producer.delivery-timeout-ms}")
+    private String deliveryTimeOut;
+    @Value("${spring.kafka.admin.properties.request.timeout.ms}")
+    private String requestTimeOut;
 
     @Bean
     public KafkaSender<String, UserRegisteredDto> kafkaSender() {
@@ -27,15 +37,11 @@ public class Config {
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-        props.put(ProducerConfig.ACKS_CONFIG, "all");
-        props.put(ProducerConfig.RETRIES_CONFIG, 3);
-        props.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, 5);
-        props.put(ProducerConfig.DELIVERY_TIMEOUT_MS_CONFIG, 120000);
-        // Sicurezza (opzionale, se Kafka usa TLS/SASL)
-        // props.put("security.protocol", "SASL_SSL");
-        // props.put("sasl.mechanism", "SCRAM-SHA-512");
-        // props.put("ssl.truststore.location", "/path/to/truststore.jks");
-        // props.put("ssl.truststore.password", "password");
+        props.put(ProducerConfig.ACKS_CONFIG, acks);
+        props.put(ProducerConfig.RETRIES_CONFIG, retries);
+        props.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, maxInFlight);
+        props.put(ProducerConfig.DELIVERY_TIMEOUT_MS_CONFIG, deliveryTimeOut);
+        props.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, requestTimeOut);
         SenderOptions<String, UserRegisteredDto> senderOptions = SenderOptions.create(props);
         return KafkaSender.create(senderOptions);
     }

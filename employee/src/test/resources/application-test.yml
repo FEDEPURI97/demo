@@ -11,7 +11,6 @@ spring:
       separator: ";"
 
   kafka:
-    bootstrap-servers: localhost:9092
     producer:
       acks: all
       retries: 1
@@ -20,7 +19,6 @@ spring:
       max-in-flight-requests-per-connection: 5
       delivery-timeout-ms: 60000
     admin:
-      auto-create: true
       close-timeout: 0s
 
   main:

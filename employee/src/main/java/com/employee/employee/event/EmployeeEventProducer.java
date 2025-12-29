@@ -4,7 +4,6 @@ import com.employee.employee.dto.UserRegisteredDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import reactor.kafka.sender.KafkaSender;

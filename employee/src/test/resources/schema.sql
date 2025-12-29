@@ -8,14 +8,13 @@ CREATE TABLE employee (
     phone_number VARCHAR(20),
     date_of_birth DATE,
     employee_code VARCHAR(50) NOT NULL,
-    hire_date DATE DEFAULT CURRENT_DATE(),
+    hire_date DATE DEFAULT CURRENT_DATE,
     end_date DATE,
     status VARCHAR(30) DEFAULT 'ACTIVE' NOT NULL,
     salary DECIMAL(12,2),
     CONSTRAINT employee_email_unique UNIQUE (email),
     CONSTRAINT employee_code_unique UNIQUE (employee_code)
 );
-
 INSERT INTO employee (name, last_name, email, phone_number, date_of_birth, employee_code, status, salary)
 VALUES 
 ('Test', 'User', 'test.user@email.com', '1234567890', '1990-01-01', 'RSSMRA80A01H501A', 'ACTIVE', 3000.00),

@@ -10,6 +10,7 @@ import com.employee.employee.factory.EmployeeMapper;
 import com.employee.employee.repository.EmployeRepository;
 import com.employee.employee.request.EmployeeRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.yaml.snakeyaml.constructor.DuplicateKeyException;
@@ -26,6 +27,8 @@ public class ServiceEmployeeImpl implements ServiceEmployee{
     private final EmployeRepository repositoryEmployee;
     private final EmployeeMapper employeeMapper;
     private final EmployeeEventProducer eventProducer;
+    @Value("${app.activation.url}")
+    private String activationUrl;
 
     @Override
     public Mono<EmployeeDto> getEmployeeById(Integer id) {
@@ -47,10 +50,10 @@ public class ServiceEmployeeImpl implements ServiceEmployee{
                     }
                     return e;
                 })
-                .flatMap(savedEmployee -> eventProducer.sendUserRegisteredEvent(
-                        employeeMapper.toRegisteredDto(employee,
-                                "https://tuosito.com/activate/" + savedEmployee.getId()))
-                        .thenReturn(employeeMapper.toDto(savedEmployee)));
+                .flatMap(employeeDb -> eventProducer.sendUserRegisteredEvent(
+                        employeeMapper.toRegisteredDto(employeeDb,
+                                activationUrl.concat(String.valueOf(employeeDb.getId()))))
+                        .thenReturn(employeeMapper.toDto(employeeDb)));
     }
 
 

@@ -23,5 +23,9 @@ spring:
     initial-size: 5
     max-size: 20
 
+app:
+  activation:
+    url: "https://tuosito.com/activate/"
+
   main:
     web-application-type: reactive

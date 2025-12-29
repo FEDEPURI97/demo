@@ -3,7 +3,6 @@ package com.employee.employee.configuration;
 import com.employee.employee.dto.UserRegisteredDto;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ser.std.StringSerializer;
-import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -28,13 +27,17 @@ public class Config {
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        props.put(ProducerConfig.ACKS_CONFIG, "all");
+        props.put(ProducerConfig.RETRIES_CONFIG, 3);
+        props.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, 5);
+        props.put(ProducerConfig.DELIVERY_TIMEOUT_MS_CONFIG, 120000);
+        // Sicurezza (opzionale, se Kafka usa TLS/SASL)
+        // props.put("security.protocol", "SASL_SSL");
+        // props.put("sasl.mechanism", "SCRAM-SHA-512");
+        // props.put("ssl.truststore.location", "/path/to/truststore.jks");
+        // props.put("ssl.truststore.password", "password");
         SenderOptions<String, UserRegisteredDto> senderOptions = SenderOptions.create(props);
         return KafkaSender.create(senderOptions);
-    }
-
-    @Bean
-    public NewTopic userRegisteredTopic() {
-        return new NewTopic("user-registered", 3, (short) 1);
     }
 
     @Bean

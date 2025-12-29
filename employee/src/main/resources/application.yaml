@@ -1,13 +1,20 @@
 spring:
   application:
     name: employee
-  flyway:
-    enabled: true
-    locations: classpath:db
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: kafka-broker1:9092,kafka-broker2:9092,kafka-broker3:9092
+    producer:
+      acks: all
+      retries: 3
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      max-in-flight-requests-per-connection: 5
+      delivery-timeout-ms: 120000
     admin:
-      auto-create: true
+      auto-create: false
+      properties:
+        request.timeout.ms: 30000
+        retries: 3
   r2dbc:
     url: r2dbc:h2:mem:///testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: sa

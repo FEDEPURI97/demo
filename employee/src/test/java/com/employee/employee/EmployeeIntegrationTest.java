@@ -2,57 +2,22 @@ package com.employee.employee;
 
 import com.employee.employee.constant.StatusEmployee;
 import com.employee.employee.dto.EmployeeDto;
-import com.employee.employee.dto.UserRegisteredDto;
 import com.employee.employee.entity.Employee;
-import com.employee.employee.repository.EmployeRepository;
 import com.employee.employee.request.EmployeeRequest;
 import com.employee.employee.request.SalaryRequest;
 import com.employee.employee.request.StatusRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
-import org.reactivestreams.Publisher;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.web.reactive.server.WebTestClient;
-import reactor.core.publisher.Flux;
-import reactor.kafka.sender.KafkaSender;
-import reactor.kafka.sender.SenderRecord;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 @Slf4j
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureWebTestClient
-@ActiveProfiles("test")
-class EmployeeIntegrationTest {
-
-    @Autowired
-    private WebTestClient webTestClient;
-
-    @Autowired
-    private EmployeRepository repository;
-
-    @MockitoBean
-    private KafkaSender<String, UserRegisteredDto> kafkaSender;
-
-    @BeforeEach
-    void setUp() {
-        when(kafkaSender.send(
-                ArgumentMatchers.<Publisher<SenderRecord<String, UserRegisteredDto, UUID>>>any()
-        )).thenReturn(Flux.empty());
-    }
+class EmployeeIntegrationTest extends ConfigTest{
 
     @Test
     void createEmployee_validationError_integrationTest() {

@@ -73,12 +73,12 @@ public class ServiceProjectImpl implements ServiceProject {
 
     @Override
     public Mono<String> updateBudget(UUID id, BigDecimal budget) {
-        return repositoryProject.updateBudget(id, budget)
-                .flatMap(updated -> {
-                    if (updated == 0) {
-                        return Mono.error(new ProjectNotIdException(id));
-                    }
-                    return Mono.just("Budget aggiornato con successo");
+        return  repositoryProject.findById(id)
+                .switchIfEmpty(Mono.error(new ProjectNotIdException(id)))
+                .flatMap(project -> {
+                    project.setBudget(budget);
+                    repositoryProject.save(project);
+                    return Mono.just("Salario aggiornato con successo");
                 });
     }
 

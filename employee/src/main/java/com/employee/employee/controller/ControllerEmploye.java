@@ -5,6 +5,10 @@ import com.employee.employee.request.EmployeeRequest;
 import com.employee.employee.request.SalaryRequest;
 import com.employee.employee.request.StatusRequest;
 import com.employee.employee.service.ServiceEmployee;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -17,37 +21,89 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("employees")
 @Validated
+@Tag(name = "Employee Controller", description = "Gestione delle operazioni sugli impiegati")
 public class ControllerEmploye {
 
     private final ServiceEmployee serviceEmployee;
 
     @GetMapping
-    public Flux<EmployeeDto> getEmployees(){
+    @Operation(
+            summary = "Recupera tutti gli impiegati",
+            description = "Restituisce la lista completa degli impiegati",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Lista degli impiegati recuperata correttamente")
+            }
+    )
+    public Flux<EmployeeDto> getEmployees() {
         return serviceEmployee.getAllEmploye();
     }
 
     @GetMapping("/{id}")
-    public Mono<EmployeeDto> getEmployee(@PathVariable("id") @NotNull Integer id){
+    @Operation(
+            summary = "Recupera un impiegato per ID",
+            description = "Restituisce i dettagli di un impiegato dato il suo ID",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Impiegato trovato"),
+                    @ApiResponse(responseCode = "404", description = "Impiegato non trovato")
+            }
+    )
+    public Mono<EmployeeDto> getEmployee(
+            @Parameter(description = "ID dell'impiegato", required = true)
+            @PathVariable("id") @NotNull Integer id) {
         return serviceEmployee.getEmployeeById(id);
     }
 
     @PostMapping
-    public Mono<EmployeeDto> createEmployee(@Valid @RequestBody EmployeeRequest request){
+    @Operation(
+            summary = "Crea un nuovo impiegato",
+            description = "Crea un impiegato con i dati forniti nel body",
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Impiegato creato con successo")
+            }
+    )
+    public Mono<EmployeeDto> createEmployee(
+            @Parameter(description = "Dati dell'impiegato", required = true)
+            @Valid @RequestBody EmployeeRequest request) {
         return serviceEmployee.createEmployee(request);
     }
 
     @PutMapping("/status")
-    public Mono<String> statusEmployee(@RequestBody @Valid StatusRequest request){
+    @Operation(
+            summary = "Aggiorna lo status di un impiegato",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Status aggiornato correttamente")
+            }
+    )
+    public Mono<String> statusEmployee(
+            @Parameter(description = "Dati per aggiornare lo status", required = true)
+            @RequestBody @Valid StatusRequest request) {
         return serviceEmployee.updateStatus(request.id(), request.statusEmployee());
     }
 
     @DeleteMapping("/{id}")
-    public Mono<String> deleteEmployee(@PathVariable("id")@NotNull Integer id){
+    @Operation(
+            summary = "Elimina un impiegato per ID",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Impiegato eliminato correttamente"),
+                    @ApiResponse(responseCode = "404", description = "Impiegato non trovato")
+            }
+    )
+    public Mono<String> deleteEmployee(
+            @Parameter(description = "ID dell'impiegato", required = true)
+            @PathVariable("id") @NotNull Integer id) {
         return serviceEmployee.deleteEmployee(id);
     }
 
-    @PutMapping("salary")
-    public Mono<String> salaryEmployee(@RequestBody @Valid SalaryRequest request){
+    @PutMapping("/salary")
+    @Operation(
+            summary = "Aggiorna lo stipendio di un impiegato",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Stipendio aggiornato correttamente")
+            }
+    )
+    public Mono<String> salaryEmployee(
+            @Parameter(description = "Dati per aggiornare lo stipendio", required = true)
+            @RequestBody @Valid SalaryRequest request) {
         return serviceEmployee.updateSalary(request.idUser(), request.salary());
     }
 

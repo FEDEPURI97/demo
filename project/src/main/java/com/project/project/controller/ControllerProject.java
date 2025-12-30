@@ -18,7 +18,7 @@ import java.util.UUID;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("project")
+@RequestMapping("projects")
 @Validated
 public class ControllerProject {
 
@@ -30,7 +30,7 @@ public class ControllerProject {
     }
 
     @GetMapping("/{id}")
-    public Mono<ProjectDto> getProject(@PathVariable("id") @NotNull UUID id){
+    public Mono<ProjectDto> getProject(@PathVariable("id") @NotNull Integer id){
         return serviceProject.getProjectById(id);
     }
 
@@ -55,7 +55,7 @@ public class ControllerProject {
     }
 
     @DeleteMapping("/{id}")
-    public Mono<String> deleteProject(@PathVariable("id")@NotNull UUID id){
+    public Mono<String> deleteProject(@PathVariable("id")@NotNull Integer id){
         return serviceProject.deleteProjects(id);
     }
 

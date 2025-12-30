@@ -3,19 +3,21 @@ package com.project.project.service;
 import com.project.project.constant.ProjectStatus;
 import com.project.project.dto.ProjectDto;
 import com.project.project.exception.DateException;
+import com.project.project.exception.DuplicateCustomException;
 import com.project.project.exception.ProjectNotIdException;
 import com.project.project.factory.ProjectMapper;
 import com.project.project.model.Project;
 import com.project.project.repository.ProjectRepository;
 import com.project.project.request.ProjectsRequest;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.yaml.snakeyaml.constructor.DuplicateKeyException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -32,7 +34,7 @@ public class ServiceProjectImpl implements ServiceProject {
     }
 
     @Override
-    public Mono<ProjectDto> getProjectById(UUID id) {
+    public Mono<ProjectDto> getProjectById(Integer id) {
         return repositoryProject.findById(id)
                 .map(mapper::toDto)
                 .switchIfEmpty(Mono.error(new ProjectNotIdException(id)));
@@ -41,14 +43,18 @@ public class ServiceProjectImpl implements ServiceProject {
     @Override
     public Mono<ProjectDto> createProjects(ProjectsRequest request) {
         Project project = mapper.toModelFromRequest(request);
-        project.setStartDate(LocalDate.now());
         project.setStatus(ProjectStatus.PLANNED);
-        Mono<Project> model = repositoryProject.save(project);
-        return model.map(mapper::toDto);
+        return repositoryProject.save(project).onErrorMap(e -> {
+                    if (e instanceof DuplicateKeyException || e instanceof DataIntegrityViolationException) {
+                        return new DuplicateCustomException("Nome progetto già presente");
+                    }
+                    return e;
+                }).flatMap(projectDb -> Mono.just(mapper.toDto(projectDb)));
     }
 
+
     @Override
-    public Mono<String> updateStatus(UUID id, ProjectStatus status) {
+    public Mono<String> updateStatus(Integer id, ProjectStatus status) {
         return repositoryProject.findById(id)
                 .switchIfEmpty(Mono.error(new ProjectNotIdException(id)))
                 .flatMap(project -> {
@@ -62,7 +68,7 @@ public class ServiceProjectImpl implements ServiceProject {
     }
 
     @Override
-    public Mono<String> deleteProjects(UUID id) {
+    public Mono<String> deleteProjects(Integer id) {
         return repositoryProject.findById(id)
                 .switchIfEmpty(Mono.error(new ProjectNotIdException(id)))
                 .flatMap(employee ->
@@ -72,18 +78,18 @@ public class ServiceProjectImpl implements ServiceProject {
     }
 
     @Override
-    public Mono<String> updateBudget(UUID id, BigDecimal budget) {
+    public Mono<String> updateBudget(Integer id, BigDecimal budget) {
         return  repositoryProject.findById(id)
                 .switchIfEmpty(Mono.error(new ProjectNotIdException(id)))
                 .flatMap(project -> {
                     project.setBudget(budget);
                     repositoryProject.save(project);
-                    return Mono.just("Salario aggiornato con successo");
+                    return Mono.just("Budget aggiornato con successo");
                 });
     }
 
     @Override
-    public Mono<String> updateEndDate(UUID id, LocalDate date) {
+    public Mono<String> updateEndDate(Integer id, LocalDate date) {
         return repositoryProject.findById(id)
                 .switchIfEmpty(Mono.error(new ProjectNotIdException(id)))
                 .flatMap(project -> {

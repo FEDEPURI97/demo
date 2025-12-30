@@ -8,21 +8,20 @@ import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.UUID;
 
 public interface ServiceProject {
 
     Flux<ProjectDto> getAllProjects();
 
-    Mono<ProjectDto> getProjectById(UUID id);
+    Mono<ProjectDto> getProjectById(Integer id);
 
     Mono<ProjectDto> createProjects(ProjectsRequest request);
 
-    Mono<String> updateStatus(UUID id, ProjectStatus status);
+    Mono<String> updateStatus(Integer id, ProjectStatus status);
 
-    Mono<String> deleteProjects(UUID id);
+    Mono<String> deleteProjects(Integer id);
 
-    Mono<String> updateBudget(UUID id, BigDecimal budget);
+    Mono<String> updateBudget(Integer id, BigDecimal budget);
 
-    Mono<String> updateEndDate(UUID id,LocalDate date);
+    Mono<String> updateEndDate(Integer id,LocalDate date);
 }

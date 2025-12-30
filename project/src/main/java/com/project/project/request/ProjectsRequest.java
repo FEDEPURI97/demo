@@ -1,6 +1,7 @@
 package com.project.project.request;
 
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -16,7 +17,9 @@ public record ProjectsRequest(
         @NotNull(message = "Salary non può essere nulla")
         @DecimalMin(value = "0.0", inclusive = false, message = "Salary deve essere maggiore di 0")
         BigDecimal budget,
-
+        @NotNull(message = "La data inizio progetto non puo essere null")
+        @FutureOrPresent(message = "La data non puo essere prima di oggi")
+        LocalDate startDate,
         LocalDate endDate
 
 ) {

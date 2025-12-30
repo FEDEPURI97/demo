@@ -2,6 +2,7 @@ package com.employee.employee.controller;
 
 import com.employee.employee.exception.DuplicateCustomException;
 import com.employee.employee.exception.EmployeeNotIdException;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -17,7 +18,7 @@ public class GlobalExceptionHandler {
     public Mono<ResponseEntity<String>> handleValidationErrors(WebExchangeBindException ex) {
         String errors = ex.getFieldErrors()
                 .stream()
-                .map(err -> err.getField() + ": " + err.getDefaultMessage())
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.joining("; "));
         return Mono.just(ResponseEntity.badRequest().body(errors));
     }

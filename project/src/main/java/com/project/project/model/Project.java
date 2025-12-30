@@ -10,7 +10,6 @@ import org.springframework.data.relational.core.mapping.Table;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Table
 @Getter
@@ -20,7 +19,7 @@ import java.util.UUID;
 public class Project {
 
     @Id
-    private UUID id;
+    private Integer id;
 
     private String name;
 

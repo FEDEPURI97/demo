@@ -143,6 +143,7 @@
 	<modules>
 		<module>employee</module>
 		<module>project</module>
+		<module>sandemail</module>
 	</modules>
 
 </project>

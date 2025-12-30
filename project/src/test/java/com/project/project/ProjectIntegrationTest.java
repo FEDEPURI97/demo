@@ -4,6 +4,7 @@ import com.project.project.constant.ProjectStatus;
 import com.project.project.dto.ProjectDto;
 import com.project.project.model.Project;
 import com.project.project.request.BudgetRequest;
+import com.project.project.request.EndDateRequest;
 import com.project.project.request.ProjectsRequest;
 import com.project.project.request.StatusRequest;
 import org.junit.jupiter.api.Test;
@@ -140,6 +141,18 @@ class ProjectIntegrationTest extends ConfigTest {
                 .expectStatus().isOk()
                 .expectBody(String.class)
                 .value(response -> assertEquals("Budget aggiornato con successo", response));
+    }
+
+    @Test
+    void update_endDate_integrationTest() {
+        EndDateRequest request = new EndDateRequest(1, LocalDate.now().plusYears(5));
+        webTestClient.put().uri("/projects/endDate")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(request)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class)
+                .value(response -> assertEquals("Fine data aggiornata con successo", response));
     }
 
     @Test

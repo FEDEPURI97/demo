@@ -93,7 +93,7 @@ public class ServiceProjectImpl implements ServiceProject {
         return repositoryProject.findById(id)
                 .switchIfEmpty(Mono.error(new ProjectNotIdException(id)))
                 .flatMap(project -> {
-                    if (date.isAfter(project.getStartDate())) throw new DateException();
+                    if (date.isBefore(project.getStartDate())) throw new DateException();
                     project.setEndDate(date);
                     repositoryProject.save(project);
                     return Mono.just("Fine data aggiornata con successo");

@@ -6,7 +6,6 @@ import com.project.project.model.Project;
 import com.project.project.request.BudgetRequest;
 import com.project.project.request.ProjectsRequest;
 import com.project.project.request.StatusRequest;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
@@ -16,7 +15,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Slf4j
 class ProjectIntegrationTest extends ConfigTest {
 
     @Test
@@ -35,15 +33,12 @@ class ProjectIntegrationTest extends ConfigTest {
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody(String.class)
-                .value(errorMessage -> {
-                    assertEquals("Salary non può essere nulla",errorMessage);
-                });
+                .value(errorMessage -> assertEquals("Salary non può essere nulla",errorMessage));
     }
 
 
     @Test
     void getEmployees_integrationTest() {
-        log.info("Call get method for all project");
         webTestClient.get().uri("/projects")
                 .exchange()
                 .expectStatus().isOk()
@@ -65,14 +60,11 @@ class ProjectIntegrationTest extends ConfigTest {
 
     @Test
     void getEmployee_notId_integrationTest() {
-        log.info("Call get method for employee by Id");
         webTestClient.get().uri("/projects/{id}", "10")
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody(String.class)
-                .value(errorMessage -> {
-                    assertEquals("Il progetto con il seguente id: 10 non è stato trovato", errorMessage);
-                });
+                .value(errorMessage -> assertEquals("Il progetto con il seguente id: 10 non è stato trovato", errorMessage));
     }
 
     @Test
@@ -86,9 +78,7 @@ class ProjectIntegrationTest extends ConfigTest {
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody(String.class)
-                .value(errorMessage -> {
-                    assertEquals("Nome progetto già presente",errorMessage);
-                });
+                .value(errorMessage -> assertEquals("Nome progetto già presente",errorMessage));
     }
 
     @Test
@@ -100,7 +90,6 @@ class ProjectIntegrationTest extends ConfigTest {
                 LocalDate.now(),
                 null
         );
-        log.info("Call post method employees body: {}", request);
         webTestClient.post().uri("/projects")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(request)
@@ -117,7 +106,6 @@ class ProjectIntegrationTest extends ConfigTest {
 
     @Test
     void getEmployeeById_integrationTest() {
-        log.info("Call get method for project by Id");
         webTestClient.get().uri("/projects/{id}", "1")
                 .exchange()
                 .expectStatus().isOk()
@@ -132,7 +120,6 @@ class ProjectIntegrationTest extends ConfigTest {
 
     @Test
     void updateStatus_integrationTest() {
-        log.info("Call PUT /status to update projects status");
         StatusRequest request = new StatusRequest(2, ProjectStatus.IN_PROGRESS);
         webTestClient.put().uri("/projects/status")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -140,14 +127,11 @@ class ProjectIntegrationTest extends ConfigTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(String.class)
-                .value(response -> {
-                    assertEquals("Status aggiornato con successo", response);
-                });
+                .value(response -> assertEquals("Status aggiornato con successo", response));
     }
 
     @Test
     void updateSalary_integrationTest() {
-        log.info("Call PUT /status to update projects status");
         BudgetRequest request = new BudgetRequest(1, new BigDecimal(150000));
         webTestClient.put().uri("/projects/budget")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -155,9 +139,7 @@ class ProjectIntegrationTest extends ConfigTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(String.class)
-                .value(response -> {
-                    assertEquals("Budget aggiornato con successo", response);
-                });
+                .value(response -> assertEquals("Budget aggiornato con successo", response));
     }
 
     @Test

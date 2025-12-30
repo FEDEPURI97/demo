@@ -6,7 +6,6 @@ import com.employee.employee.entity.Employee;
 import com.employee.employee.request.EmployeeRequest;
 import com.employee.employee.request.SalaryRequest;
 import com.employee.employee.request.StatusRequest;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
@@ -16,7 +15,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Slf4j
 class EmployeeIntegrationTest extends ConfigTest{
 
     @Test
@@ -46,7 +44,6 @@ class EmployeeIntegrationTest extends ConfigTest{
 
     @Test
     void getEmployees_integrationTest() {
-        log.info("Call get method for all employees");
         webTestClient.get().uri("/employees")
                 .exchange()
                 .expectStatus().isOk()
@@ -68,7 +65,6 @@ class EmployeeIntegrationTest extends ConfigTest{
 
     @Test
     void getEmployee_notId_integrationTest() {
-        log.info("Call get method for employee by Id");
         webTestClient.get().uri("/employees/{id}", "10")
                 .exchange()
                 .expectStatus().isBadRequest()
@@ -111,7 +107,6 @@ class EmployeeIntegrationTest extends ConfigTest{
                 LocalDate.of(1980,1,1),
                 new BigDecimal("3000")
         );
-        log.info("Call post method employees body: {}", request);
         webTestClient.post().uri("/employees")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(request)
@@ -129,7 +124,6 @@ class EmployeeIntegrationTest extends ConfigTest{
 
     @Test
     void getEmployeeById_integrationTest() {
-        log.info("Call get method for employee by Id");
         webTestClient.get().uri("/employees/{id}", "2")
                 .exchange()
                 .expectStatus().isOk()
@@ -143,7 +137,6 @@ class EmployeeIntegrationTest extends ConfigTest{
 
     @Test
     void updateStatus_integrationTest() {
-        log.info("Call PUT /status to update employee status");
         StatusRequest request = new StatusRequest(1, StatusEmployee.ON_LEAVE);
         webTestClient.put().uri("/employees/status")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -158,7 +151,6 @@ class EmployeeIntegrationTest extends ConfigTest{
 
     @Test
     void updateSalary_integrationTest() {
-        log.info("Call PUT /status to update employee status");
         SalaryRequest request = new SalaryRequest(1, new BigDecimal(5000));
         webTestClient.put().uri("/employees/salary")
                 .contentType(MediaType.APPLICATION_JSON)

@@ -23,7 +23,8 @@ spring:
 
 app:
   activation:
-    register-topic: "https://tuosito.com/activate/"
+    register-link: "https://tuosito.com/activate/"
+    register-topic: "user-registered"
 
   main:
     web-application-type: reactive

@@ -27,7 +27,7 @@ public class ServiceEmployeeImpl implements ServiceEmployee{
     private final EmployeRepository repositoryEmployee;
     private final EmployeeMapper employeeMapper;
     private final EmployeeEventProducer eventProducer;
-    @Value("${app.activation.url}")
+    @Value("${app.activation.register-link}")
     private String activationUrl;
 
     @Override
